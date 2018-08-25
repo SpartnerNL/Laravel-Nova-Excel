@@ -1,0 +1,29 @@
+{
+  "name": "maatwebsite/laravel-nova-excel",
+  "description": "An eloquent way of importing and exporting Excel and CSV",
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "phpspreadsheet",
+    "phpexcel",
+    "nova",
+    "laravel-nova",
+    "actions"
+  ],
+  "authors": [
+    {
+      "name": "Patrick Brouwers",
+      "email": "patrick@maatwebsite.nl"
+    }
+  ],
+  "require": {
+    "php": "^7.0",
+    "illuminate/support": "^5.5",
+    "maatwebsite/excel": "^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Maatwebsite\\LaravelNovaExcel\\": "src/"
+    }
+  }
+}

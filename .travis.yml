@@ -1,0 +1,20 @@
+language: php
+
+sudo: false
+
+cache:
+  directories:
+  - $HOME/.composer/cache
+
+php:
+- 7.0
+- 7.1
+- 7.12
+
+before_script:
+- composer self-update --stable --no-interaction
+
+install:
+- travis_retry composer install --prefer-source --dev --no-suggest --no-interaction
+
+script: vendor/bin/phpunit --verbose --configuration phpunit.xml.dist
