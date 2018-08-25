@@ -11,7 +11,7 @@ class ExportActionRequest extends ActionRequest
      */
     public function getExportQuery()
     {
-        return $this->toSelectedResourceQuery()->when(! $this->forAllMatchingResources(), function ($query) {
+        return $this->toSelectedResourceQuery()->when(!$this->forAllMatchingResources(), function ($query) {
             $query->whereKey(explode(',', $this->resources));
         });
     }

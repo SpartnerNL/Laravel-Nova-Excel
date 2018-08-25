@@ -2,18 +2,18 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
-use Illuminate\Database\Query\Builder;
-use Illuminate\Foundation\Bus\PendingDispatch;
-use Laravel\Nova\Actions\Action;
-use Laravel\Nova\Actions\ActionMethod;
-use Laravel\Nova\Exceptions\MissingActionHandlerException;
 use Laravel\Nova\Fields\Field;
-use Laravel\Nova\Http\Requests\ActionRequest;
-use Maatwebsite\Excel\Concerns\FromQuery;
+use Laravel\Nova\Actions\Action;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Database\Query\Builder;
+use Laravel\Nova\Actions\ActionMethod;
+use Maatwebsite\Excel\Concerns\FromQuery;
+use Laravel\Nova\Http\Requests\ActionRequest;
+use Illuminate\Foundation\Bus\PendingDispatch;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithDisk;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithFilename;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
+use Laravel\Nova\Exceptions\MissingActionHandlerException;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 
@@ -33,6 +33,17 @@ class ExportToExcel extends Action implements FromQuery
      * @var Field[]
      */
     protected $actionFields;
+
+    /**
+     * Remove all attributes from this class when serializing,
+     * so the action can be queued as exportable.
+     *
+     * @return array
+     */
+    public function __sleep()
+    {
+        return [];
+    }
 
     /**
      * Execute the action for the given request.
@@ -97,6 +108,14 @@ class ExportToExcel extends Action implements FromQuery
     }
 
     /**
+     * @return Field[]
+     */
+    public function fields()
+    {
+        return $this->actionFields;
+    }
+
+    /**
      * @param Builder $query
      *
      * @return $this
@@ -114,24 +133,5 @@ class ExportToExcel extends Action implements FromQuery
     protected function getDefaultExtension(): string
     {
         return $this->getWriterType() ? strtolower($this->getWriterType()) : 'xlsx';
-    }
-
-    /**
-     * @return Field[]
-     */
-    public function fields()
-    {
-        return $this->actionFields;
-    }
-
-    /**
-     * Remove all attributes from this class when serializing,
-     * so the action can be queued as exportable.
-     *
-     * @return array
-     */
-    public function __sleep()
-    {
-        return [];
     }
 }

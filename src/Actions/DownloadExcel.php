@@ -2,8 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
-use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Actions\Action;
+use Illuminate\Support\Facades\Storage;
 
 class DownloadExcel extends ExportToExcel
 {
@@ -13,7 +13,7 @@ class DownloadExcel extends ExportToExcel
     protected $disk = 'public';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function handle($response)
     {
