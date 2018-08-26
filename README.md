@@ -59,7 +59,7 @@
 composer require maatwebsite/laravel-nova-excel
 ```
 
-:muscle: Go to your resource. As example we'll use the `app/Nova/User.php`
+:muscle: Go to your resource. As example we'll use the `app/Nova/User.php`. Add `DownloadExcel` action to your `actions()` list.
 
 ```php
 <?php
