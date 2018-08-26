@@ -9,6 +9,7 @@ trait AskForFilename
     /**
      * Ask the user for a filename.
      *
+     * @param string $label Input label
      * @return $this
      */
     public function askForFilename(string $label = null)
