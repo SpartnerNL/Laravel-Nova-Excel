@@ -11,9 +11,9 @@ trait AskForFilename
      *
      * @return $this
      */
-    public function askForFilename()
+    public function askForFilename(string $label = null)
     {
-        $this->actionFields[] = Text::make(__('Filename'), 'filename');
+        $this->actionFields[] = Text::make($label ?? __('Filename'), 'filename');
 
         return $this;
     }
