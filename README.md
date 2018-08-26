@@ -108,7 +108,7 @@ class User extends Resource
 
 :page_facing_up: Find your `users.xlsx` in your downloads folder!
 
-More installation instructions can be found at: [https://laravel-excel.maatwebsite.nl/nova/1.0//getting-started/installation.html](https://laravel-excel.maatwebsite.nl/nova/1.0//getting-started/installation.html)
+More installation instructions can be found at: [https://laravel-excel.maatwebsite.nl/nova/1.0/getting-started/installation.html](https://laravel-excel.maatwebsite.nl/nova/1.0/getting-started/installation.html)
 
 ## 🎓 Learning Laravel Nova Excel
 
