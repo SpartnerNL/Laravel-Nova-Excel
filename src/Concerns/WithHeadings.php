@@ -2,8 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 trait WithHeadings
 {
@@ -60,7 +60,7 @@ trait WithHeadings
     {
         return function ($query) {
             /**
-             * @var Builder $query
+             * @var Builder
              * @var Model   $model
              */
             $model = $query->first();

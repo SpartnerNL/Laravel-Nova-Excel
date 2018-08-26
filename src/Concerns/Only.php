@@ -16,7 +16,7 @@ trait Only
      */
     public function only($columns)
     {
-        $this->only = \is_array($columns) ? $columns : \func_get_args() ;
+        $this->only = \is_array($columns) ? $columns : \func_get_args();
 
         return $this;
     }
