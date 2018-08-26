@@ -36,9 +36,9 @@
 </p>
 
 <h4 align="center">
-  <a href="https://laravel-excel.maatwebsite.nl/3.0/nova/geting-started">Quickstart</a>
+  <a href="https://laravel-excel.maatwebsite.nl/nova/1.0/geting-started/">Quickstart</a>
   <span> · </span>
-  <a href="https://laravel-excel.maatwebsite.nl/3.0/nova/">Documentation</a>
+  <a href="https://laravel-excel.maatwebsite.nl/nova/1.0/">Documentation</a>
   <span> · </span>
   <a href="https://laravel-excel.maatwebsite.nl/blog/">Blog</a>
   <span> · </span>
@@ -102,11 +102,11 @@ class User extends Resource
 
 :page_facing_up: Find your `users.xlsx` in your downloads folder!
 
-More installation instructions can be found at: [https://laravel-excel.maatwebsite.nl/3.0/getting-started/installation.html](https://laravel-excel.maatwebsite.nl/3.0/getting-started/installation.html)
+More installation instructions can be found at: [https://laravel-excel.maatwebsite.nl/nova/1.0//getting-started/installation.html](https://laravel-excel.maatwebsite.nl/nova/1.0//getting-started/installation.html)
 
-## 🎓 Learning Laravel Excel
+## 🎓 Learning Laravel Nova Excel
 
-You can find the full documentation of Laravel Nova Excel [on the website](https://laravel-excel.maatwebsite.nl/nova).
+You can find the full documentation of Laravel Nova Excel [on the website](https://laravel-excel.maatwebsite.nl/nova/1.0/).
 
 We welcome suggestions for improving our docs. The documentation repository can be found at [https://github.com/Maatwebsite/laravel-excel-docs](https://github.com/Maatwebsite/laravel-excel-docs).
 
