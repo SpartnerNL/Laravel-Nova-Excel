@@ -4,12 +4,14 @@ namespace Maatwebsite\LaravelNovaExcel\Actions;
 
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Actions\Action;
+use Maatwebsite\Excel\Concerns\WithCustomChunkSize;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Query\Builder;
 use Laravel\Nova\Actions\ActionMethod;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Illuminate\Foundation\Bus\PendingDispatch;
+use Maatwebsite\LaravelNovaExcel\Concerns\WithChunkCount;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithDisk;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithFilename;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
@@ -18,10 +20,11 @@ use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForWriterType;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 
-class ExportToExcel extends Action implements FromQuery
+class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize
 {
     use AskForFilename,
         AskForWriterType,
+        WithChunkCount,
         WithDisk,
         WithFilename,
         WithWriterType;
