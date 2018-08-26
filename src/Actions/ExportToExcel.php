@@ -12,6 +12,7 @@ use Laravel\Nova\Actions\ActionMethod;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Illuminate\Foundation\Bus\PendingDispatch;
+use Maatwebsite\LaravelNovaExcel\Concerns\Only;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithDisk;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithFilename;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithChunkCount;
@@ -26,6 +27,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
 {
     use AskForFilename,
         AskForWriterType,
+        Only,
         WithChunkCount,
         WithDisk,
         WithFilename,
@@ -70,7 +72,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
             throw MissingActionHandlerException::make($this, $method);
         }
 
-        $query = ExportActionRequest::createFrom($request)->getExportQuery();
+        $query = $this->getExportQuery($request);
         $this->handleHeadings($query);
 
         $response = Excel::store(
@@ -144,5 +146,21 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     protected function getDefaultExtension(): string
     {
         return $this->getWriterType() ? strtolower($this->getWriterType()) : 'xlsx';
+    }
+
+    /**
+     * @param ActionRequest $request
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|Builder|mixed
+     */
+    private function getExportQuery(ActionRequest $request)
+    {
+        $query = ExportActionRequest::createFrom($request)->getExportQuery();
+
+        if (\count($this->getOnly()) > 0) {
+            $query->select($this->getOnly());
+        }
+
+        return $query;
     }
 }
