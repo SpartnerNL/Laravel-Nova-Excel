@@ -59,7 +59,7 @@
 composer require maatwebsite/laravel-nova-excel
 ```
 
-Make sure your `public` storage folder is linked, as Nova downloads require a url for making something downloadable.
+:exclamation: Make sure your `public` storage folder is linked, as Nova downloads require a url for making something downloadable.
 
 ```
 php artisan storage:link
