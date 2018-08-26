@@ -4,29 +4,32 @@ namespace Maatwebsite\LaravelNovaExcel\Actions;
 
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Actions\Action;
+use Maatwebsite\Excel\Concerns\WithCustomChunkSize;
+use Maatwebsite\Excel\Concerns\WithHeadings as WithHeadingsConcern;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Query\Builder;
 use Laravel\Nova\Actions\ActionMethod;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Illuminate\Foundation\Bus\PendingDispatch;
-use Maatwebsite\Excel\Concerns\WithCustomChunkSize;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithDisk;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithFilename;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithChunkCount;
+use Maatwebsite\LaravelNovaExcel\Concerns\WithHeadings;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
 use Laravel\Nova\Exceptions\MissingActionHandlerException;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForWriterType;
 
-class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize
+class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, WithHeadingsConcern
 {
     use AskForFilename,
         AskForWriterType,
         WithChunkCount,
         WithDisk,
         WithFilename,
+        WithHeadings,
         WithWriterType;
 
     /**
@@ -68,6 +71,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize
         }
 
         $query = ExportActionRequest::createFrom($request)->getExportQuery();
+        $this->handleHeadings($query);
 
         $response = Excel::store(
             $this->withQuery($query),
