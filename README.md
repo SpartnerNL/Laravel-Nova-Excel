@@ -19,7 +19,7 @@
 
 <p align="center">
   <a href="https://styleci.io/repos/146120416">
-    <img src="https://styleci.io/repos/146120416/shield?branch=3.0" alt="StyleCI">
+    <img src="https://styleci.io/repos/146120416/shield?branch=1.0" alt="StyleCI">
   </a> 
   
    <a href="https://packagist.org/packages/maatwebsite/laravel-nova-excel">
