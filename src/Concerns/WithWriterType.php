@@ -2,6 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
+use Laravel\Nova\Http\Requests\ActionRequest;
+
 trait WithWriterType
 {
     /**
@@ -27,5 +29,17 @@ trait WithWriterType
     protected function getWriterType(): ?string
     {
         return $this->writerType;
+    }
+
+    /**
+     * @param ActionRequest $request
+     */
+    protected function handleWriterType(ActionRequest $request)
+    {
+        $fields = $request->resolveFields();
+
+        if ($filename = $fields->get('writer_type')) {
+            $this->withWriterType($filename);
+        }
     }
 }

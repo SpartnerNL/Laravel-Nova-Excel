@@ -15,11 +15,13 @@ use Maatwebsite\LaravelNovaExcel\Concerns\WithFilename;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
 use Laravel\Nova\Exceptions\MissingActionHandlerException;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
+use Maatwebsite\LaravelNovaExcel\Interactions\AskForWriterType;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 
 class ExportToExcel extends Action implements FromQuery
 {
     use AskForFilename,
+        AskForWriterType,
         WithDisk,
         WithFilename,
         WithWriterType;
@@ -54,6 +56,7 @@ class ExportToExcel extends Action implements FromQuery
      */
     public function handleRequest(ActionRequest $request)
     {
+        $this->handleWriterType($request);
         $this->handleFilename($request);
 
         $method = ActionMethod::determine($this, $request->targetModel());
@@ -70,15 +73,16 @@ class ExportToExcel extends Action implements FromQuery
             $this->getWriterType()
         );
 
-        return $this->{$method}($response);
+        return $this->{$method}($request, $response);
     }
 
     /**
+     * @param ActionRequest        $request
      * @param bool|PendingDispatch $response
      *
      * @return array
      */
-    public function handle($response)
+    public function handle(ActionRequest $request, $response)
     {
         if (false === $response) {
             return Action::danger(__('Resource could not be exported.'));

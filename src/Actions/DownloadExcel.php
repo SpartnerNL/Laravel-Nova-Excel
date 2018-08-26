@@ -4,6 +4,7 @@ namespace Maatwebsite\LaravelNovaExcel\Actions;
 
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Nova\Http\Requests\ActionRequest;
 
 class DownloadExcel extends ExportToExcel
 {
@@ -15,7 +16,7 @@ class DownloadExcel extends ExportToExcel
     /**
      * {@inheritdoc}
      */
-    public function handle($response)
+    public function handle(ActionRequest $request, $response)
     {
         if (false === $response) {
             return Action::danger(__('Resource export could not be downloaded.'));
