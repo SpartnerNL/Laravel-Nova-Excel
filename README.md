@@ -18,10 +18,6 @@
 </p>
 
 <p align="center">
-  <a href="https://travis-ci.org/Maatwebsite/Laravel-Nova-Excel">
-    <img src="https://travis-ci.org/Maatwebsite/Laravel-Nova-Excel.svg?branch=3.0" alt="Build Status">
-  </a> 
-  
   <a href="https://styleci.io/repos/146120416">
     <img src="https://styleci.io/repos/146120416/shield?branch=3.0" alt="StyleCI">
   </a> 
