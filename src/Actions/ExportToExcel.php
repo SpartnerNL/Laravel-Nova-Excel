@@ -105,12 +105,12 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
 
         if (false === $response) {
             return \is_callable($this->onFailure)
-                ? ($this->onFailure)($request)
+                ? ($this->onFailure)($request, $response)
                 : Action::danger(__('Resource could not be exported.'));
         }
 
         return \is_callable($this->onSuccess)
-            ? ($this->onSuccess)($request)
+            ? ($this->onSuccess)($request, $response)
             : Action::message(__('Resource was successfully exported.'));
     }
 

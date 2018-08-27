@@ -25,7 +25,7 @@ class DownloadExcel extends ExportToExcel
 
         if (!$response instanceof BinaryFileResponse || $response->isInvalid()) {
             return \is_callable($this->onFailure)
-                ? ($this->onFailure)($request)
+                ? ($this->onFailure)($request, $response)
                 : Action::danger(__('Resource could not be exported.'));
         }
 
