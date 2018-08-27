@@ -59,12 +59,6 @@
 composer require maatwebsite/laravel-nova-excel
 ```
 
-:exclamation: Make sure your `public` storage folder is linked, as Nova downloads require a url for making something downloadable.
-
-```
-php artisan storage:link
-```
-
 :muscle: Go to your resource. As example we'll use the `app/Nova/User.php`. Add `DownloadExcel` action to your `actions()` list.
 
 ```php
