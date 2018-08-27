@@ -6,9 +6,8 @@ use Illuminate\Routing\Controller;
 
 class DownloadExcelController extends Controller
 {
-	public function show()
-	{
-		return response()->download(request('path'),request('filename'))->deleteFileAfterSend();
-	}
-
+    public function show()
+    {
+        return response()->download(request('path'), request('filename'))->deleteFileAfterSend();
+    }
 }

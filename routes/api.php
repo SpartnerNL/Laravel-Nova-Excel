@@ -14,5 +14,4 @@ use Maatwebsite\LaravelNovaExcel\Http\Controllers\DownloadExcelController;
 |
 */
 
-Route::get('download',DownloadExcelController::class.'@show');
-
+Route::get('download', DownloadExcelController::class . '@show');

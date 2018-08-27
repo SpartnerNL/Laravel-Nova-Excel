@@ -9,9 +9,9 @@ trait WithDisk
      */
     protected $disk;
 
-	protected $streamDownload = false;
+    protected $streamDownload = false;
 
-	/**
+    /**
      * @param string|null $disk
      *
      * @return $this
