@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Maatwebsite\LaravelNovaExcel\Http\Controllers\DownloadExcelController;
+use Maatwebsite\LaravelNovaExcel\Http\Controllers\ExcelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,4 +14,4 @@ use Maatwebsite\LaravelNovaExcel\Http\Controllers\DownloadExcelController;
 |
 */
 
-Route::get('download', DownloadExcelController::class . '@show');
+Route::get('download', ExcelController::class . '@download');

@@ -2,7 +2,6 @@
 
 namespace Maatwebsite\LaravelNovaExcel;
 
-use Laravel\Nova\Nova;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,16 +20,6 @@ class LaravelNovaExcelServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
-
-    /**
      * Register the tool's routes.
      *
      * @return void
@@ -42,7 +31,7 @@ class LaravelNovaExcelServiceProvider extends ServiceProvider
         }
 
         Route::middleware(['nova'])
-            ->prefix('nova-vendor/maatwebsite/laravel-nova-excel')
-            ->group(__DIR__ . '/../routes/api.php');
+             ->prefix('nova-vendor/maatwebsite/laravel-nova-excel')
+             ->group(__DIR__ . '/../routes/api.php');
     }
 }

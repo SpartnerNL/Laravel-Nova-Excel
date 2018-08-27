@@ -45,6 +45,16 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     protected $actionFields;
 
     /**
+     * @var callable|null
+     */
+    protected $onSuccess;
+
+    /**
+     * @var callable|null
+     */
+    protected $onFailure;
+
+    /**
      * Remove all attributes from this class when serializing,
      * so the action can be queued as exportable.
      *
@@ -74,38 +84,59 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
 
         $query = $this->getExportQuery($request);
         $this->handleHeadings($query);
+        $exportable = $this->withQuery($query);
 
-        if (!$this->streamDownload) {
-            $response = Excel::store(
-                $this->withQuery($query),
-                $this->getFilename(),
-                $this->getDisk(),
-                $this->getWriterType()
-            );
-        } else {
-            $response = Excel::download(
-                $this->withQuery($query),
-                $this->getFilename(),
-                $this->getWriterType()
-            );
-        }
-
-        return $this->{$method}($request, $response);
+        return $this->{$method}($request, $exportable);
     }
 
     /**
-     * @param ActionRequest        $request
-     * @param bool|PendingDispatch $response
+     * @param ActionRequest $request
+     * @param Action        $exportable
      *
      * @return array
      */
-    public function handle(ActionRequest $request, $response)
+    public function handle(ActionRequest $request, Action $exportable): array
     {
+        $response = Excel::store(
+            $exportable,
+            $this->getFilename(),
+            $this->getDisk(),
+            $this->getWriterType()
+        );
+
         if (false === $response) {
-            return Action::danger(__('Resource could not be exported.'));
+            return \is_callable($this->onFailure)
+                ? ($this->onFailure)($request)
+                : Action::danger(__('Resource could not be exported.'));
         }
 
-        return Action::message(__('Resource was successfully exported.'));
+        return \is_callable($this->onSuccess)
+            ? ($this->onSuccess)($request)
+            : Action::message(__('Resource was successfully exported.'));
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return $this
+     */
+    public function onSuccess(callable $callback)
+    {
+        $this->onSuccess = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return $this
+     */
+    public function onFailure(callable $callback)
+    {
+        $this->onFailure = $callback;
+
+        return $this;
     }
 
     /**
@@ -161,7 +192,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
      *
      * @return \Illuminate\Database\Eloquent\Builder|Builder|mixed
      */
-    private function getExportQuery(ActionRequest $request)
+    protected function getExportQuery(ActionRequest $request)
     {
         $query = ExportActionRequest::createFrom($request)->getExportQuery();
 

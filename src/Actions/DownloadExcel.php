@@ -5,39 +5,49 @@ namespace Maatwebsite\LaravelNovaExcel\Actions;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Nova\Http\Requests\ActionRequest;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DownloadExcel extends ExportToExcel
 {
-    protected $streamDownload = true;
-
     /**
-     * {@inheritdoc}
+     * @param ActionRequest $request
+     * @param Action        $exportable
+     *
+     * @return array
      */
-    public function handle(ActionRequest $request, $response)
+    public function handle(ActionRequest $request, Action $exportable): array
     {
-        if ($response == false || ($response instanceof BinaryFileResponse && $response->isInvalid())) {
-            return Action::danger(__('Resource export could not be downloaded.'));
+        $response = Excel::download(
+            $exportable,
+            $this->getFilename(),
+            $this->getWriterType()
+        );
+
+        if (!$response instanceof BinaryFileResponse || $response->isInvalid()) {
+            return \is_callable($this->onFailure)
+                ? ($this->onFailure)($request)
+                : Action::danger(__('Resource could not be exported.'));
         }
 
-        return Action::download(
-            $this->getDownloadUrl($response),
-            $this->getFilename()
-        );
+        return \is_callable($this->onSuccess)
+            ? ($this->onSuccess)($request, $response)
+            : Action::download(
+                $this->getDownloadUrl($response),
+                $this->getFilename()
+            );
     }
 
     /**
+     * @param BinaryFileResponse $response
+     *
      * @return string
      */
-    private function getDownloadUrl(BinaryFileResponse $response)
+    protected function getDownloadUrl(BinaryFileResponse $response): string
     {
-        if ($this->streamDownload) {
-            return url('/nova-vendor/maatwebsite/laravel-nova-excel/download?') . http_build_query([
-                    'path'     => $response->getFile()->getPathname(),
-                    'filename' => $this->getFilename(),
-                ]);
-        } else {
-            return url(Storage::disk($this->getDisk())->url($this->getFilename()));
-        }
+        return url('/nova-vendor/maatwebsite/laravel-nova-excel/download?') . http_build_query([
+                'path'     => $response->getFile()->getPathname(),
+                'filename' => $this->getFilename(),
+            ]);
     }
 }
