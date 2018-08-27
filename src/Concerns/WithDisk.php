@@ -9,7 +9,9 @@ trait WithDisk
      */
     protected $disk;
 
-    /**
+	protected $streamDownload = false;
+
+	/**
      * @param string|null $disk
      *
      * @return $this
@@ -17,6 +19,8 @@ trait WithDisk
     public function withDisk(string $disk = null)
     {
         $this->disk = $disk;
+
+        $this->streamDownload = false;
 
         return $this;
     }

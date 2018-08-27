@@ -26,5 +26,12 @@
     "psr-4": {
       "Maatwebsite\\LaravelNovaExcel\\": "src/"
     }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Maatwebsite\\LaravelNovaExcel\\LaravelNovaExcelServiceProvider"
+      ]
+    }
   }
 }
