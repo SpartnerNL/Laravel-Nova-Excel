@@ -9,7 +9,6 @@ use Illuminate\Database\Query\Builder;
 use Laravel\Nova\Actions\ActionMethod;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Laravel\Nova\Http\Requests\ActionRequest;
-use Illuminate\Foundation\Bus\PendingDispatch;
 use Maatwebsite\LaravelNovaExcel\Concerns\Only;
 use Maatwebsite\Excel\Concerns\WithCustomChunkSize;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithDisk;

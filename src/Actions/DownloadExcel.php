@@ -3,9 +3,8 @@
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
 use Laravel\Nova\Actions\Action;
-use Illuminate\Support\Facades\Storage;
-use Laravel\Nova\Http\Requests\ActionRequest;
 use Maatwebsite\Excel\Facades\Excel;
+use Laravel\Nova\Http\Requests\ActionRequest;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DownloadExcel extends ExportToExcel
