@@ -44,7 +44,8 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
      */
     protected $actionFields;
 
-    /**
+
+	/**
      * Remove all attributes from this class when serializing,
      * so the action can be queued as exportable.
      *
@@ -75,12 +76,21 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
         $query = $this->getExportQuery($request);
         $this->handleHeadings($query);
 
-        $response = Excel::store(
-            $this->withQuery($query),
-            $this->getFilename(),
-            $this->getDisk(),
-            $this->getWriterType()
-        );
+        if (! $this->streamDownload)
+		{
+			$response = Excel::store(
+				$this->withQuery($query),
+				$this->getFilename(),
+				$this->getDisk(),
+				$this->getWriterType()
+			);
+		}else{
+			$response = Excel::download(
+				$this->withQuery($query),
+				$this->getFilename(),
+				$this->getWriterType()
+			);
+		}
 
         return $this->{$method}($request, $response);
     }
