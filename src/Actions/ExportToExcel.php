@@ -83,9 +83,8 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
             throw MissingActionHandlerException::make($this, $method);
         }
 
-        $query = $this
-            ->toQuery($request)
-            ->when(is_callable($this->headingCallback), $this->headingCallback);
+        $query = $this->toQuery($request);
+        $this->handleHeadings($query);
 
         return $this->{$method}($request, $this->withQuery($query));
     }

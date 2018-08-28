@@ -18,18 +18,20 @@ trait WithHeadings
     protected $headings = [];
 
     /**
-     * @param array|null $headings
+     * @param array|mixed $headings
      *
      * @return $this
      */
-    public function withHeadings(array $headings = null)
+    public function withHeadings($headings = null)
     {
-        if (\is_array($headings)) {
+        $headings = \is_array($headings) ? $headings : \func_get_args();
+
+        if (0 === count($headings)) {
+            $this->headingCallback = $this->autoHeading();
+        } else {
             $this->headingCallback = function () use ($headings) {
                 return $headings;
             };
-        } else {
-            $this->headingCallback = $this->autoHeading();
         }
 
         return $this;
@@ -61,7 +63,7 @@ trait WithHeadings
         return function ($query) {
             /**
              * @var Builder
-             * @var Model   $model
+             * @var Model $model
              */
             $model = $query->first();
 
