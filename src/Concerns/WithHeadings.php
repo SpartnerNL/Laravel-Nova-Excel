@@ -51,7 +51,7 @@ trait WithHeadings
     protected function handleHeadings($query)
     {
         if (\is_callable($this->headingCallback)) {
-            $headingQuery = clone $query;
+            $headingQuery   = clone $query;
             $this->headings = ($this->headingCallback)($headingQuery);
         }
     }
