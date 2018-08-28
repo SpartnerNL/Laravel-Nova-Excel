@@ -17,7 +17,7 @@ class ExportActionRequest extends ActionRequest
         return $this->toSelectedResourceQuery()->when(!$this->forAllMatchingResources(), function ($query) {
             $query->whereKey(explode(',', $this->resources));
         })->when($onlyIndexFields, function ($query) {
-            return $query->select($this->newResource()->indexFields($this)->map->attribute->unique()->all());
+            $query->select($this->newResource()->indexFields($this)->map->attribute->unique()->all());
         })->when(\count($only) > 0, function ($query) use ($only) {
             $query->select($only);
         });
