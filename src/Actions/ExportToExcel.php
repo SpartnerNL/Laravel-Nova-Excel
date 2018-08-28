@@ -15,6 +15,7 @@ use Maatwebsite\LaravelNovaExcel\Concerns\WithDisk;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithFilename;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithHeadings;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithChunkCount;
+use Maatwebsite\LaravelNovaExcel\Concerns\WithIndexFields;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
 use Laravel\Nova\Exceptions\MissingActionHandlerException;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
@@ -31,6 +32,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
         WithDisk,
         WithFilename,
         WithHeadings,
+        WithIndexFields,
         WithWriterType;
 
     /**
@@ -81,11 +83,11 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
             throw MissingActionHandlerException::make($this, $method);
         }
 
-        $query = $this->getExportQuery($request);
-        $this->handleHeadings($query);
-        $exportable = $this->withQuery($query);
+        $query = $this
+            ->toQuery($request)
+            ->when(is_callable($this->headingCallback), $this->headingCallback);
 
-        return $this->{$method}($request, $exportable);
+        return $this->{$method}($request, $this->withQuery($query));
     }
 
     /**
@@ -167,6 +169,18 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
+     * @param ActionRequest $request
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|Builder|mixed
+     */
+    protected function toQuery(ActionRequest $request)
+    {
+        return ExportActionRequest
+            ::createFrom($request)
+            ->toExportQuery($this->onlyIndexFields, $this->getOnly());
+    }
+
+    /**
      * @param Builder $query
      *
      * @return $this
@@ -184,21 +198,5 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     protected function getDefaultExtension(): string
     {
         return $this->getWriterType() ? strtolower($this->getWriterType()) : 'xlsx';
-    }
-
-    /**
-     * @param ActionRequest $request
-     *
-     * @return \Illuminate\Database\Eloquent\Builder|Builder|mixed
-     */
-    protected function getExportQuery(ActionRequest $request)
-    {
-        $query = ExportActionRequest::createFrom($request)->getExportQuery();
-
-        if (\count($this->getOnly()) > 0) {
-            $query->select($this->getOnly());
-        }
-
-        return $query;
     }
 }
