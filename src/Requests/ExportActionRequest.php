@@ -2,9 +2,9 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Requests;
 
+use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Laravel\Nova\Http\Requests\LensActionRequest;
-use Laravel\Nova\Lenses\Lens;
 
 class ExportActionRequest extends ActionRequest
 {
