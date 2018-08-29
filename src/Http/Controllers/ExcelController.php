@@ -28,6 +28,6 @@ class ExcelController extends Controller
         return $response->download(
             $data['path'],
             $data['filename']
-        )->deleteFileAfterSend();
+        )->deleteFileAfterSend($shouldDelete = true);
     }
 }
