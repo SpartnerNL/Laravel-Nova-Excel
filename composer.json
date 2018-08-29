@@ -1,6 +1,6 @@
 {
   "name": "maatwebsite/laravel-nova-excel",
-  "description": "Supercharged Resource Excel exports in Laravel Nova",
+  "description": "Supercharged Excel exports for Laravel Nova Resources",
   "license": "MIT",
   "keywords": [
     "laravel",
