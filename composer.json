@@ -1,6 +1,6 @@
 {
   "name": "maatwebsite/laravel-nova-excel",
-  "description": "An eloquent way of importing and exporting Excel and CSV",
+  "description": "Supercharged Resource Excel exports in Laravel Nova",
   "license": "MIT",
   "keywords": [
     "laravel",
