@@ -4,6 +4,7 @@ namespace Maatwebsite\LaravelNovaExcel\Actions;
 
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Http\Requests\LensActionRequest;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Query\Builder;
 use Laravel\Nova\Actions\ActionMethod;
@@ -175,8 +176,11 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     protected function toQuery(ActionRequest $request)
     {
         return ExportActionRequest
-            ::createFrom($request)
-            ->toExportQuery($this->onlyIndexFields, $this->getOnly());
+            ::createFromActionRequest($request)
+            ->toExportQuery(
+                $this->onlyIndexFields,
+                $this->getOnly()
+            );
     }
 
     /**
