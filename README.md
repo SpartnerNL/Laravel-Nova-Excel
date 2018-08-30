@@ -36,7 +36,7 @@
 </p>
 
 <h4 align="center">
-  <a href="https://laravel-excel.maatwebsite.nl/nova/1.0/geting-started/">Quickstart</a>
+  <a href="https://laravel-excel.maatwebsite.nl/nova/1.0/getting-started/">Quickstart</a>
   <span> · </span>
   <a href="https://laravel-excel.maatwebsite.nl/nova/1.0/">Documentation</a>
   <span> · </span>
