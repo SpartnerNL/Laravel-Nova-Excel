@@ -2,6 +2,7 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Requests;
 
+use Illuminate\Support\Collection;
 use Laravel\Nova\Lenses\Lens;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Laravel\Nova\Http\Requests\LensActionRequest;
@@ -25,7 +26,7 @@ class ExportActionRequest extends ActionRequest
             $query->whereKey(explode(',', $this->resources));
         })->when($onlyIndexFields, function ($query) {
             $query->select($this->indexFields());
-        })->when(\count($only) > 0, function ($query) use ($only) {
+        })->when(count($only) > 0, function ($query) use ($only) {
             $query->select($only);
         });
     }
@@ -60,7 +61,7 @@ class ExportActionRequest extends ActionRequest
     protected function indexFields(): array
     {
         $fields = $this->lens
-            ? collect($this->lens->fields($this))
+            ? new Collection($this->lens->fields($this))
             : $this->newResource()->indexFields($this);
 
         return $fields->map->attribute->unique()->all();

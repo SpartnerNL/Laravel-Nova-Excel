@@ -9,12 +9,20 @@ trait AskForFilename
     /**
      * Ask the user for a filename.
      *
-     * @param string $label Input label
+     * @param string        $label Input label
+     * @param callable|null $callback
+     *
      * @return $this
      */
-    public function askForFilename(string $label = null)
+    public function askForFilename(string $label = null, callable $callback = null)
     {
-        $this->actionFields[] = Text::make($label ?? __('Filename'), 'filename');
+        $field = Text::make($label ?? __('Filename'), 'filename');
+
+        if (is_callable($callback)) {
+            $callback($field);
+        }
+
+        $this->actionFields[] = $field;
 
         return $this;
     }
