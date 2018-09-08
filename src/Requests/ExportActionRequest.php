@@ -2,8 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Requests;
 
-use Illuminate\Support\Collection;
 use Laravel\Nova\Lenses\Lens;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Laravel\Nova\Http\Requests\LensActionRequest;
 
