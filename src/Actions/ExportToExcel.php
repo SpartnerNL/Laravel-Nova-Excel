@@ -63,7 +63,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
      */
     public function __sleep()
     {
-        return [];
+        return ['headings'];
     }
 
     /**
