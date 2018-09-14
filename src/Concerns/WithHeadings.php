@@ -72,7 +72,7 @@ trait WithHeadings
                 return [];
             }
 
-            return array_keys($model->attributesToArray());
+            return array_keys(array_except($model->attributesToArray(), $this->getExcept()));
         };
     }
 }
