@@ -2,17 +2,17 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
-use Illuminate\Database\Eloquent\Model;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Actions\Action;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Query\Builder;
 use Laravel\Nova\Actions\ActionMethod;
+use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\WithMapping;
 use Laravel\Nova\Http\Requests\ActionRequest;
-use Maatwebsite\LaravelNovaExcel\Concerns\Except;
 use Maatwebsite\LaravelNovaExcel\Concerns\Only;
+use Maatwebsite\LaravelNovaExcel\Concerns\Except;
 use Maatwebsite\Excel\Concerns\WithCustomChunkSize;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithDisk;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithFilename;
@@ -172,6 +172,20 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
+     * @param Model|mixed $row
+     *
+     * @return array
+     */
+    public function map($row): array
+    {
+        if ($row instanceof Model) {
+            return array_except($row->attributesToArray(), $this->getExcept());
+        }
+
+        return $row;
+    }
+
+    /**
      * @param ActionRequest $request
      *
      * @return \Illuminate\Database\Eloquent\Builder|Builder|mixed
@@ -204,19 +218,5 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     protected function getDefaultExtension(): string
     {
         return $this->getWriterType() ? strtolower($this->getWriterType()) : 'xlsx';
-    }
-
-    /**
-     * @param Model|mixed $row
-     *
-     * @return array
-     */
-    public function map($row): array
-    {
-        if ($row instanceof Model) {
-            return array_except($row->attributesToArray(), $this->getExcept());
-        }
-
-        return $row;
     }
 }
