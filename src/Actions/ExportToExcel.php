@@ -19,9 +19,9 @@ use Maatwebsite\LaravelNovaExcel\Concerns\WithHeadings;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithChunkCount;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
-use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequestFactory;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForWriterType;
 use Maatwebsite\Excel\Concerns\WithHeadings as WithHeadingsConcern;
+use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequestFactory;
 
 class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, WithHeadingsConcern, WithMapping
 {
