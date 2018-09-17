@@ -20,7 +20,6 @@ use Maatwebsite\LaravelNovaExcel\Concerns\WithHeadings;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithChunkCount;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
 use Laravel\Nova\Exceptions\MissingActionHandlerException;
-use Maatwebsite\LaravelNovaExcel\Concerns\WithIndexFields;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForWriterType;
@@ -36,7 +35,6 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
         WithDisk,
         WithFilename,
         WithHeadings,
-        WithIndexFields,
         WithWriterType;
 
     /**
@@ -67,7 +65,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
      */
     public function __sleep()
     {
-        return ['headings', 'except'];
+        return ['headings', 'except', 'only', 'onlyIndexFields'];
     }
 
     /**
@@ -87,19 +85,22 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
             throw MissingActionHandlerException::make($this, $method);
         }
 
-        $query = $this->toQuery($request);
+        $request = ExportActionRequest::createFromActionRequest($request);
+
+        $query = $request->toQuery();
+        $this->handleOnly($request);
         $this->handleHeadings($query);
 
         return $this->{$method}($request, $this->withQuery($query));
     }
 
     /**
-     * @param ActionRequest $request
-     * @param Action        $exportable
+     * @param ExportActionRequest $request
+     * @param Action              $exportable
      *
      * @return array
      */
-    public function handle(ActionRequest $request, Action $exportable): array
+    public function handle(ExportActionRequest $request, Action $exportable): array
     {
         $response = Excel::store(
             $exportable,
@@ -178,26 +179,31 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
      */
     public function map($row): array
     {
+        $only   = $this->getOnly();
+        $except = $this->getExcept();
+
         if ($row instanceof Model) {
-            return array_except($row->attributesToArray(), $this->getExcept());
+            // If user didn't specify a custom except array, use the hidden columns.
+            // User can override this by passing an empty array ->except([])
+            // When user specifies with only(), ignore if the column is hidden or not.
+            if ($except === null && (!is_array($only) || count($only) === 0)) {
+                $except = $row->getHidden();
+            }
+
+            // Make all attributes visible
+            $row->setHidden([]);
+            $row = $row->attributesToArray();
+        }
+
+        if (is_array($only) && count($only) > 0) {
+            $row = array_only($row, $only);
+        }
+
+        if (is_array($except) && count($except) > 0) {
+            $row = array_except($row, $except);
         }
 
         return $row;
-    }
-
-    /**
-     * @param ActionRequest $request
-     *
-     * @return \Illuminate\Database\Eloquent\Builder|Builder|mixed
-     */
-    protected function toQuery(ActionRequest $request)
-    {
-        return ExportActionRequest
-            ::createFromActionRequest($request)
-            ->toExportQuery(
-                $this->onlyIndexFields,
-                $this->getOnly()
-            );
     }
 
     /**

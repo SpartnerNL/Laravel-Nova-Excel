@@ -5,9 +5,9 @@ namespace Maatwebsite\LaravelNovaExcel\Concerns;
 trait Except
 {
     /**
-     * @var array
+     * @var array|null
      */
-    protected $except = [];
+    protected $except;
 
     /**
      * @param array|mixed $columns
@@ -22,9 +22,9 @@ trait Except
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getExcept(): array
+    public function getExcept()
     {
         return $this->except;
     }

@@ -15,19 +15,12 @@ class ExportActionRequest extends ActionRequest
     protected $lens;
 
     /**
-     * @param bool  $onlyIndexFields
-     * @param array $only
-     *
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder|mixed
      */
-    public function toExportQuery(bool $onlyIndexFields = false, array $only = [])
+    public function toExportQuery()
     {
         return $this->toSelectedResourceQuery()->when(!$this->forAllMatchingResources(), function ($query) {
             $query->whereKey(explode(',', $this->resources));
-        })->when($onlyIndexFields, function ($query) {
-            $query->select($this->indexFields());
-        })->when(count($only) > 0, function ($query) use ($only) {
-            $query->select($only);
         });
     }
 
@@ -48,22 +41,22 @@ class ExportActionRequest extends ActionRequest
     }
 
     /**
-     * @param Lens $lens
-     */
-    protected function setLens(Lens $lens)
-    {
-        $this->lens = $lens;
-    }
-
-    /**
      * @return array
      */
-    protected function indexFields(): array
+    public function indexFields(): array
     {
         $fields = $this->lens
             ? new Collection($this->lens->fields($this))
             : $this->newResource()->indexFields($this);
 
         return $fields->map->attribute->unique()->all();
+    }
+
+    /**
+     * @param Lens $lens
+     */
+    protected function setLens(Lens $lens)
+    {
+        $this->lens = $lens;
     }
 }

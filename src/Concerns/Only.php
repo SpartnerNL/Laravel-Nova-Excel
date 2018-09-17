@@ -2,12 +2,19 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
+use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
+
 trait Only
 {
     /**
-     * @var array
+     * @var array|null
      */
-    protected $only = [];
+    protected $only;
+
+    /**
+     * @var bool
+     */
+    protected $onlyIndexFields = true;
 
     /**
      * @param array|mixed $columns
@@ -22,10 +29,42 @@ trait Only
     }
 
     /**
-     * @return array
+     * @return $this
      */
-    public function getOnly(): array
+    public function onlyIndexFields()
+    {
+        $this->onlyIndexFields = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function allFields()
+    {
+        $this->onlyIndexFields = false;
+
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getOnly()
     {
         return $this->only;
+    }
+
+    /**
+     * @param ExportActionRequest $request
+     */
+    protected function handleOnly(ExportActionRequest $request)
+    {
+        // If not a specific only array, and user wants only index fields,
+        // fill the only with the index fields.
+        if ($this->onlyIndexFields && (!is_array($this->only) || count($this->only) === 0)) {
+            $this->only = $request->indexFields();
+        }
     }
 }
