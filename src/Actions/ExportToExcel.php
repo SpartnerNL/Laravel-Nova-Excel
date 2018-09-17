@@ -6,7 +6,6 @@ use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Actions\Action;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Query\Builder;
-use Laravel\Nova\Actions\ActionMethod;
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -19,9 +18,8 @@ use Maatwebsite\LaravelNovaExcel\Concerns\WithFilename;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithHeadings;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithChunkCount;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
-use Laravel\Nova\Exceptions\MissingActionHandlerException;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
-use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
+use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequestFactory;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForWriterType;
 use Maatwebsite\Excel\Concerns\WithHeadings as WithHeadingsConcern;
 
@@ -80,27 +78,22 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
         $this->handleWriterType($request);
         $this->handleFilename($request);
 
-        $method = ActionMethod::determine($this, $request->targetModel());
-        if (!method_exists($this, $method)) {
-            throw MissingActionHandlerException::make($this, $method);
-        }
+        $exportRequest = ExportActionRequestFactory::make($request);
 
-        $request = ExportActionRequest::createFromActionRequest($request);
-
-        $query = $request->toQuery();
-        $this->handleOnly($request);
+        $query = $exportRequest->toExportQuery();
+        $this->handleOnly($exportRequest);
         $this->handleHeadings($query);
 
-        return $this->{$method}($request, $this->withQuery($query));
+        return $this->handle($request, $this->withQuery($query));
     }
 
     /**
-     * @param ExportActionRequest $request
-     * @param Action              $exportable
+     * @param ActionRequest $request
+     * @param Action        $exportable
      *
      * @return array
      */
-    public function handle(ExportActionRequest $request, Action $exportable): array
+    public function handle(ActionRequest $request, Action $exportable): array
     {
         $response = Excel::store(
             $exportable,
@@ -186,7 +179,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
             // If user didn't specify a custom except array, use the hidden columns.
             // User can override this by passing an empty array ->except([])
             // When user specifies with only(), ignore if the column is hidden or not.
-            if ($except === null && (!is_array($only) || count($only) === 0)) {
+            if (!$this->onlyIndexFields && $except === null && (!is_array($only) || count($only) === 0)) {
                 $except = $row->getHidden();
             }
 

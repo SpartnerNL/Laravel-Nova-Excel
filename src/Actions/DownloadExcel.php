@@ -4,18 +4,18 @@ namespace Maatwebsite\LaravelNovaExcel\Actions;
 
 use Laravel\Nova\Actions\Action;
 use Maatwebsite\Excel\Facades\Excel;
+use Laravel\Nova\Http\Requests\ActionRequest;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 
 class DownloadExcel extends ExportToExcel
 {
     /**
-     * @param ExportActionRequest $request
-     * @param Action              $exportable
+     * @param ActionRequest $request
+     * @param Action        $exportable
      *
      * @return array
      */
-    public function handle(ExportActionRequest $request, Action $exportable): array
+    public function handle(ActionRequest $request, Action $exportable): array
     {
         $response = Excel::download(
             $exportable,
