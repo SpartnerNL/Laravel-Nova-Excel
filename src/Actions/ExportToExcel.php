@@ -2,11 +2,10 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
-use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
-use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Actions\Action;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -21,12 +20,12 @@ use Maatwebsite\LaravelNovaExcel\Concerns\WithFilename;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithHeadings;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithChunkCount;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
+use Maatwebsite\LaravelNovaExcel\Requests\SerializedRequest;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
+use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForWriterType;
 use Maatwebsite\Excel\Concerns\WithHeadings as WithHeadingsConcern;
-use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequestFactory;
-use Maatwebsite\LaravelNovaExcel\Requests\SerializedRequest;
 
 class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, WithHeadingsConcern, WithMapping
 {
@@ -264,17 +263,16 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
         $fields   = $this->resourceFields($resource);
 
         foreach ($only as $attribute) {
-
             /** @var Field $field */
-            $field = $fields->firstWhere('attribute', $attribute);
+            $field = $fields->where('attribute', $attribute)->last();
 
             // When no field could be found, it's most likely a computed field
             // Try to lookup by the name.
             if ($field === null) {
-                $field = $fields->firstWhere('name', $attribute);
+                $field = $fields->where('name', $attribute)->last();
             }
 
-            if ($field && $this->shouldReplaceValue($field)) {
+            if ($field) {
                 $row[$attribute] = $field->value;
             }
         }
@@ -283,21 +281,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * Only replace value when there's a callback or it's a computed field.
-     *
-     * @param Field $field
-     *
-     * @return bool
-     */
-    protected function shouldReplaceValue(Field $field): bool
-    {
-        return $field->computed()
-            || is_callable($field->resolveCallback)
-            || is_callable($field->displayCallback);
-    }
-
-    /**
-     * @param Resource $resource
+     * @param resource $resource
      *
      * @return Collection
      */
@@ -309,7 +293,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     /**
      * @param Model $model
      *
-     * @return Resource
+     * @return resource
      */
     protected function resolveResource(Model $model): Resource
     {

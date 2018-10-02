@@ -2,21 +2,20 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Requests;
 
+use Laravel\Nova\Resource;
 use Laravel\Nova\Fields\Field;
 use Illuminate\Support\Collection;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Resource;
 
 trait WithIndexFields
 {
     /**
-     * @param Resource $resource
+     * @param resource $resource
      *
      * @return array
      */
     public function indexFields(Resource $resource): array
     {
-        return $this->resourceFields($resource)->map(function(Field $field) {
+        return $this->resourceFields($resource)->map(function (Field $field) {
             if (!$field->computed()) {
                 return $field->attribute;
             }
@@ -26,7 +25,7 @@ trait WithIndexFields
     }
 
     /**
-     * @param Resource $resource
+     * @param resource $resource
      *
      * @return Collection|Field[]
      */
