@@ -2,6 +2,9 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
+use Laravel\Nova\Nova;
+use Laravel\Nova\Resource;
+use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Actions\Action;
 use Maatwebsite\Excel\Facades\Excel;
@@ -21,7 +24,9 @@ use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForWriterType;
 use Maatwebsite\Excel\Concerns\WithHeadings as WithHeadingsConcern;
+use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequestFactory;
+use Maatwebsite\LaravelNovaExcel\Requests\SerializedRequest;
 
 class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, WithHeadingsConcern, WithMapping
 {
@@ -34,6 +39,16 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
         WithFilename,
         WithHeadings,
         WithWriterType;
+
+    /**
+     * @var ExportActionRequest|ActionRequest
+     */
+    protected $request;
+
+    /**
+     * @var string
+     */
+    protected $resource;
 
     /**
      * @var Builder
@@ -56,14 +71,30 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     protected $onFailure;
 
     /**
-     * Remove all attributes from this class when serializing,
+     * Remove some attributes from this class when serializing,
      * so the action can be queued as exportable.
+     * Serialize the request, so we keep information about
+     * the resource and lens in the queued jobs.
      *
      * @return array
      */
     public function __sleep()
     {
-        return ['headings', 'except', 'only', 'onlyIndexFields'];
+        if (!$this->request instanceof SerializedRequest) {
+            $this->request = SerializedRequest::serialize($this->request);
+        }
+
+        return ['headings', 'except', 'only', 'onlyIndexFields', 'request', 'resource'];
+    }
+
+    /**
+     * Unserialize the action.
+     */
+    public function __wakeup()
+    {
+        if ($this->request instanceof SerializedRequest) {
+            $this->request = $this->request->unserialize();
+        }
     }
 
     /**
@@ -78,11 +109,12 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
         $this->handleWriterType($request);
         $this->handleFilename($request);
 
-        $exportRequest = ExportActionRequestFactory::make($request);
+        $this->resource = $request->resource();
+        $this->request  = ExportActionRequestFactory::make($request);
 
-        $query = $exportRequest->toExportQuery();
-        $this->handleOnly($exportRequest);
-        $this->handleHeadings($query, $exportRequest);
+        $query = $this->request->toExportQuery();
+        $this->handleOnly($this->request);
+        $this->handleHeadings($query, $this->request);
 
         return $this->handle($request, $this->withQuery($query));
     }
@@ -185,7 +217,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
 
             // Make all attributes visible
             $row->setHidden([]);
-            $row = $row->attributesToArray();
+            $row = $this->replaceFieldValuesWhenOnResource($row, $only);
         }
 
         if (is_array($only) && count($only) > 0) {
@@ -217,5 +249,72 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     protected function getDefaultExtension(): string
     {
         return $this->getWriterType() ? strtolower($this->getWriterType()) : 'xlsx';
+    }
+
+    /**
+     * @param Model $model
+     * @param array $only
+     *
+     * @return array
+     */
+    protected function replaceFieldValuesWhenOnResource(Model $model, array $only = []): array
+    {
+        $row      = $model->attributesToArray();
+        $resource = $this->resolveResource($model);
+        $fields   = $this->resourceFields($resource);
+
+        foreach ($only as $attribute) {
+
+            /** @var Field $field */
+            $field = $fields->firstWhere('attribute', $attribute);
+
+            // When no field could be found, it's most likely a computed field
+            // Try to lookup by the name.
+            if ($field === null) {
+                $field = $fields->firstWhere('name', $attribute);
+            }
+
+            if ($field && $this->shouldReplaceValue($field)) {
+                $row[$attribute] = $field->value;
+            }
+        }
+
+        return $row;
+    }
+
+    /**
+     * Only replace value when there's a callback or it's a computed field.
+     *
+     * @param Field $field
+     *
+     * @return bool
+     */
+    protected function shouldReplaceValue(Field $field): bool
+    {
+        return $field->computed()
+            || is_callable($field->resolveCallback)
+            || is_callable($field->displayCallback);
+    }
+
+    /**
+     * @param Resource $resource
+     *
+     * @return Collection
+     */
+    protected function resourceFields(Resource $resource)
+    {
+        return $this->request->resourceFields($resource);
+    }
+
+    /**
+     * @param Model $model
+     *
+     * @return Resource
+     */
+    protected function resolveResource(Model $model): Resource
+    {
+        $resource = $this->resource;
+
+        return new $resource($model);
     }
 }

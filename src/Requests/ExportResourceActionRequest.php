@@ -5,6 +5,7 @@ namespace Maatwebsite\LaravelNovaExcel\Requests;
 use Laravel\Nova\Fields\Field;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Http\Requests\ActionRequest;
+use Laravel\Nova\Resource;
 
 class ExportResourceActionRequest extends ActionRequest implements ExportActionRequest
 {
@@ -22,10 +23,12 @@ class ExportResourceActionRequest extends ActionRequest implements ExportActionR
     }
 
     /**
+     * @param Resource $resource
+     *
      * @return Collection|Field[]
      */
-    public function resourceFields()
+    public function resourceFields(Resource $resource): Collection
     {
-        return $this->newResource()->indexFields($this);
+        return $resource->indexFields($this);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
+use Laravel\Nova\Http\Requests\ActionRequest;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 
 trait Only
@@ -57,14 +58,14 @@ trait Only
     }
 
     /**
-     * @param ExportActionRequest $request
+     * @param ExportActionRequest|ActionRequest $request
      */
     protected function handleOnly(ExportActionRequest $request)
     {
         // If not a specific only array, and user wants only index fields,
         // fill the only with the index fields.
         if ($this->onlyIndexFields && (!is_array($this->only) || count($this->only) === 0)) {
-            $this->only = $request->indexFields();
+            $this->only = $request->indexFields($request->newResource());
         }
     }
 }
