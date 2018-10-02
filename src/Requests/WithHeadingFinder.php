@@ -12,16 +12,7 @@ trait WithHeadingFinder
      */
     public function findHeading(string $attribute, string $default = null): string
     {
-        $field = $this
-            ->newResource()
-            ->indexFields($this)
-            ->firstWhere('attribute', $attribute);
-
-        if (null === $field) {
-            return $default;
-        }
-
-        return $field->name;
+        return $default;
     }
 
     /**
