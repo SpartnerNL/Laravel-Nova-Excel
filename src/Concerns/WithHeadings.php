@@ -2,9 +2,9 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 
 trait WithHeadings
@@ -65,9 +65,9 @@ trait WithHeadings
      */
     protected function autoHeading(): callable
     {
-        return function ($query, ExportActionRequest $request)  {
+        return function ($query, ExportActionRequest $request) {
             /**
-             * @var Model $model
+             * @var Model
              */
             $model = $query->first();
 
@@ -79,7 +79,7 @@ trait WithHeadings
                 array_keys($this->map($model))
             );
 
-            return $attributes->map(function(string $attribute) use ($request) {
+            return $attributes->map(function (string $attribute) use ($request) {
                 return $request->findHeading($attribute, $attribute);
             })->toArray();
         };
