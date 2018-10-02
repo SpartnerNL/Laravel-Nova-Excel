@@ -82,7 +82,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
 
         $query = $exportRequest->toExportQuery();
         $this->handleOnly($exportRequest);
-        $this->handleHeadings($query);
+        $this->handleHeadings($query, $exportRequest);
 
         return $this->handle($request, $this->withQuery($query));
     }

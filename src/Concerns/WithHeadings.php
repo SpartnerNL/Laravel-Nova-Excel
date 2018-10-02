@@ -4,6 +4,8 @@ namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 
 trait WithHeadings
 {
@@ -19,6 +21,7 @@ trait WithHeadings
 
     /**
      * @param array|mixed $headings
+     * @param array       $only
      *
      * @return $this
      */
@@ -46,13 +49,14 @@ trait WithHeadings
     }
 
     /**
-     * @param Builder $query
+     * @param Builder             $query
+     * @param ExportActionRequest $request
      */
-    protected function handleHeadings($query)
+    protected function handleHeadings($query, ExportActionRequest $request)
     {
         if (\is_callable($this->headingCallback)) {
             $headingQuery   = clone $query;
-            $this->headings = ($this->headingCallback)($headingQuery);
+            $this->headings = ($this->headingCallback)($headingQuery, $request);
         }
     }
 
@@ -61,9 +65,8 @@ trait WithHeadings
      */
     protected function autoHeading(): callable
     {
-        return function ($query) {
+        return function ($query, ExportActionRequest $request)  {
             /**
-             * @var Builder
              * @var Model $model
              */
             $model = $query->first();
@@ -72,7 +75,13 @@ trait WithHeadings
                 return [];
             }
 
-            return array_keys($this->map($model));
+            $attributes = new Collection(
+                array_keys($this->map($model))
+            );
+
+            return $attributes->map(function(string $attribute) use ($request) {
+                return $request->findHeading($attribute, $attribute);
+            })->toArray();
         };
     }
 }
