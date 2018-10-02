@@ -3,6 +3,8 @@
 namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
 use Laravel\Nova\Http\Requests\ActionRequest;
+use Laravel\Nova\Http\Requests\LensActionRequest;
+use Laravel\Nova\Resource;
 
 trait WithFilename
 {
@@ -36,9 +38,16 @@ trait WithFilename
      */
     protected function withDefaultFilename(ActionRequest $request)
     {
+        /** @var Resource $resource */
         $resource = $request->resource();
+        $filename = $resource::uriKey();
 
-        $this->withFilename(strtolower($resource::label()) . '.' . $this->getDefaultExtension());
+        // Append the lens name to the filename
+        if ($request instanceof LensActionRequest) {
+            $filename .= '-' . $request->lens()->uriKey();
+        }
+
+        $this->withFilename($filename . '.' . $this->getDefaultExtension());
     }
 
     /**
