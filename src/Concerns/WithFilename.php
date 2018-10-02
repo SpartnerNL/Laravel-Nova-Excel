@@ -2,9 +2,9 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
+use Laravel\Nova\Resource;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Laravel\Nova\Http\Requests\LensActionRequest;
-use Laravel\Nova\Resource;
 
 trait WithFilename
 {
@@ -38,7 +38,7 @@ trait WithFilename
      */
     protected function withDefaultFilename(ActionRequest $request)
     {
-        /** @var Resource $resource */
+        /** @var resource $resource */
         $resource = $request->resource();
         $filename = $resource::uriKey();
 

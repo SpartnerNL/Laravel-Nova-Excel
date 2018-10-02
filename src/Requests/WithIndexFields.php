@@ -2,8 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Requests;
 
-use Illuminate\Support\Collection;
 use Laravel\Nova\Fields\Field;
+use Illuminate\Support\Collection;
 
 trait WithIndexFields
 {
