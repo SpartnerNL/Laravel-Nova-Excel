@@ -3,10 +3,14 @@
 namespace Maatwebsite\LaravelNovaExcel\Requests;
 
 use Illuminate\Support\Collection;
+use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Http\Requests\LensActionRequest;
 
 class ExportLensActionRequest extends LensActionRequest implements ExportActionRequest
 {
+    use WithIndexFields;
+    use WithHeadingFinder;
+
     /**
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder|mixed
      */
@@ -18,12 +22,10 @@ class ExportLensActionRequest extends LensActionRequest implements ExportActionR
     }
 
     /**
-     * @return array
+     * @return Collection|Field[]
      */
-    public function indexFields(): array
+    public function resourceFields()
     {
-        $fields = new Collection($this->lens()->fields($this));
-
-        return $fields->map->attribute->unique()->all();
+        return new Collection($this->lens()->fields($this));
     }
 }
