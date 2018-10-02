@@ -281,7 +281,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * @param resource $resource
+     * @param \Laravel\Nova\Resource $resource
      *
      * @return Collection
      */
@@ -293,7 +293,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     /**
      * @param Model $model
      *
-     * @return resource
+     * @return \Laravel\Nova\Resource
      */
     protected function resolveResource(Model $model): Resource
     {

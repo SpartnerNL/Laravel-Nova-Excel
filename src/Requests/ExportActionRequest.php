@@ -14,14 +14,14 @@ interface ExportActionRequest
     public function toExportQuery();
 
     /**
-     * @param resource $resource
+     * @param \Laravel\Nova\Resource $resource
      *
      * @return array
      */
     public function indexFields(Resource $resource): array;
 
     /**
-     * @param resource $resource
+     * @param \Laravel\Nova\Resource $resource
      *
      * @return Collection|Field[]
      */

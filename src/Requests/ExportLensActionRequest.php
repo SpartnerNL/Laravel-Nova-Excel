@@ -13,7 +13,7 @@ class ExportLensActionRequest extends LensActionRequest implements ExportActionR
     use WithHeadingFinder;
 
     /**
-     * @var resource
+     * @var \Laravel\Nova\Resource
      */
     protected $resourceInstance;
 
@@ -28,7 +28,7 @@ class ExportLensActionRequest extends LensActionRequest implements ExportActionR
     }
 
     /**
-     * @param resource $resource
+     * @param \Laravel\Nova\Resource $resource
      *
      * @return Collection|Field[]
      */

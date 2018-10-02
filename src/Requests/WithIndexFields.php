@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 trait WithIndexFields
 {
     /**
-     * @param resource $resource
+     * @param \Laravel\Nova\Resource $resource
      *
      * @return array
      */
@@ -25,7 +25,7 @@ trait WithIndexFields
     }
 
     /**
-     * @param resource $resource
+     * @param \Laravel\Nova\Resource $resource
      *
      * @return Collection|Field[]
      */
