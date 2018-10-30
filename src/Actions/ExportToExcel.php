@@ -2,6 +2,7 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
+use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Resource;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Actions\Action;
@@ -258,22 +259,30 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
      */
     protected function replaceFieldValuesWhenOnResource(Model $model, array $only = []): array
     {
-        $row      = $model->attributesToArray();
         $resource = $this->resolveResource($model);
         $fields   = $this->resourceFields($resource);
 
-        foreach ($only as $attribute) {
-            /** @var Field $field */
-            $field = $fields->where('attribute', $attribute)->last();
-
-            // When no field could be found, it's most likely a computed field
-            // Try to lookup by the name.
-            if ($field === null) {
-                $field = $fields->where('name', $attribute)->last();
+        $row = [];
+        foreach ($fields as $field) {
+            if (!$this->isExportableField($field)) {
+                continue;
             }
 
-            if ($field) {
-                $row[$attribute] = $field->value;
+            if (\in_array($field->attribute, $only, true)) {
+                $row[$field->attribute] = $field->value;
+            } elseif (\in_array($field->name, $only, true)) {
+                // When no field could be found by their attribute name, it's most likely a computed field.
+                $row[$field->name] = $field->value;
+            }
+        }
+
+        $missingFields = array_diff($only, array_keys($row));
+
+        if (count($missingFields) > 0) {
+            foreach ($missingFields as $attribute) {
+                if ($model->{$attribute}) {
+                    $row[$attribute] = $model->{$attribute};
+                }
             }
         }
 
@@ -300,5 +309,15 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
         $resource = $this->resource;
 
         return new $resource($model);
+    }
+
+    /**
+     * @param Field $field
+     *
+     * @return bool
+     */
+    protected function isExportableField(Field $field): bool
+    {
+        return !$field instanceof Gravatar;
     }
 }
