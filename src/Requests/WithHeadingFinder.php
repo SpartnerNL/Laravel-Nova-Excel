@@ -12,7 +12,18 @@ trait WithHeadingFinder
      */
     public function findHeading(string $attribute, string $default = null): string
     {
-        return $default;
+        // In case attribute is used multiple times, grab last Field.
+        $field = $this
+            ->newResource()
+            ->indexFields($this)
+            ->where('attribute', $attribute)
+            ->last();
+
+        if (null === $field) {
+            return $default;
+        }
+
+        return $field->name;
     }
 
     /**

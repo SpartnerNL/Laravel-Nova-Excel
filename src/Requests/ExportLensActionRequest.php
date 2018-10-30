@@ -2,6 +2,7 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Requests;
 
+use Laravel\Nova\Resource;
 use Laravel\Nova\Fields\Field;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Http\Requests\LensActionRequest;
@@ -10,6 +11,11 @@ class ExportLensActionRequest extends LensActionRequest implements ExportActionR
 {
     use WithIndexFields;
     use WithHeadingFinder;
+
+    /**
+     * @var \Laravel\Nova\Resource
+     */
+    protected $resourceInstance;
 
     /**
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder|mixed
@@ -22,10 +28,31 @@ class ExportLensActionRequest extends LensActionRequest implements ExportActionR
     }
 
     /**
+     * @param \Laravel\Nova\Resource $resource
+     *
      * @return Collection|Field[]
      */
-    public function resourceFields()
+    public function resourceFields(Resource $resource): Collection
     {
-        return new Collection($this->lens()->fields($this));
+        $this->resourceInstance = $resource;
+
+        $lens           = $this->lens();
+        $lens->resource = $resource->model();
+
+        return $lens->resolveFields($this);
+    }
+
+    /**
+     * Get all of the possible lenses for the request.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function availableLenses()
+    {
+        if (!$this->resourceInstance) {
+            $this->resourceInstance = $this->newResource();
+        }
+
+        return $this->resourceInstance->availableLenses($this);
     }
 }
