@@ -2,10 +2,10 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
-use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Resource;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Fields\Gravatar;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Database\Query\Builder;
@@ -276,13 +276,10 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
             }
         }
 
-        $missingFields = array_diff($only, array_keys($row));
-
-        if (count($missingFields) > 0) {
-            foreach ($missingFields as $attribute) {
-                if ($model->{$attribute}) {
-                    $row[$attribute] = $model->{$attribute};
-                }
+        // Add fields that were requested by ->only(), but are not registered as fields in the Nova resource.
+        foreach (array_diff($only, array_keys($row)) as $attribute) {
+            if ($model->{$attribute}) {
+                $row[$attribute] = $model->{$attribute};
             }
         }
 
