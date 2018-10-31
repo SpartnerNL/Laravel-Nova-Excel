@@ -239,7 +239,10 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
 
             // Make all attributes visible
             $row->setHidden([]);
-            $row = $this->replaceFieldValuesWhenOnResource($row, $only);
+            $row = $this->replaceFieldValuesWhenOnResource(
+                $row,
+                is_array($only) ? $only : array_keys($row->attributesToArray())
+            );
         }
 
         if (is_array($only) && count($only) > 0) {
