@@ -305,6 +305,8 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
         foreach (array_diff($only, array_keys($row)) as $attribute) {
             if ($model->{$attribute}) {
                 $row[$attribute] = $model->{$attribute};
+            } else {
+                $row[$attribute] = ''; 
             }
         }
 
