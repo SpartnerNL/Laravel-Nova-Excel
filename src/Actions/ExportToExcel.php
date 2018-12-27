@@ -306,7 +306,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
             if ($model->{$attribute}) {
                 $row[$attribute] = $model->{$attribute};
             } else {
-                $row[$attribute] = ''; 
+                $row[$attribute] = '';
             }
         }
 
