@@ -36,10 +36,7 @@ class ExportLensActionRequest extends LensActionRequest implements ExportActionR
     {
         $this->resourceInstance = $resource;
 
-        $lens           = $this->lens();
-        $lens->resource = $resource->model();
-
-        return $lens->resolveFields($this);
+        return $this->lens()->resolveFields($this);
     }
 
     /**
