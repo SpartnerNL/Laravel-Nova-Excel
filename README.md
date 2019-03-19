@@ -36,15 +36,15 @@
 </p>
 
 <h4 align="center">
-  <a href="https://laravel-excel.maatwebsite.nl/nova/1.1/getting-started/">Quickstart</a>
+  <a href="https://docs.laravel-excel.com/nova/1.1/getting-started/">Quickstart</a>
   <span> · </span>
-  <a href="https://laravel-excel.maatwebsite.nl/nova/1.1/">Documentation</a>
+  <a href="https://docs.laravel-excel.com/nova/1.1/">Documentation</a>
   <span> · </span>
-  <a href="https://laravel-excel.maatwebsite.nl/blog/">Blog</a>
+  <a href="https://docs.laravel-excel.com/blog/">Blog</a>
   <span> · </span>
-  <a href="https://laravel-excel.maatwebsite.nl/3.1/getting-started/contributing.html">Contributing</a>
+  <a href="https://docs.laravel-excel.com/3.1/getting-started/contributing.html">Contributing</a>
   <span> · </span>
-  <a href="https://laravel-excel.maatwebsite.nl/3.1/getting-started/support.html">Support</a>
+  <a href="https://docs.laravel-excel.com/3.1/getting-started/support.html">Support</a>
 </h4>
 
 - **Easily export resources to Excel.** Supercharge your Nova resources and export them directly to an Excel or CSV document. Exporting has never been so easy.
@@ -106,11 +106,11 @@ class User extends Resource
 
 :page_facing_up: Find your `users.xlsx` in your downloads folder!
 
-More installation instructions can be found at: [https://laravel-excel.maatwebsite.nl/nova/1.1/getting-started/installation.html](https://laravel-excel.maatwebsite.nl/nova/1.1/getting-started/installation.html)
+More installation instructions can be found at: [https://docs.laravel-excel.com/nova/1.1/getting-started/installation.html](https://docs.laravel-excel.com/nova/1.1/getting-started/installation.html)
 
 ## 🎓 Learning Laravel Nova Excel
 
-You can find the full documentation of Laravel Nova Excel [on the website](https://laravel-excel.maatwebsite.nl/nova/1.1/).
+You can find the full documentation of Laravel Nova Excel [on the website](https://docs.laravel-excel.com/nova/1.1/).
 
 We welcome suggestions for improving our docs. The documentation repository can be found at [https://github.com/Maatwebsite/laravel-excel-docs](https://github.com/Maatwebsite/laravel-excel-docs).
 
@@ -125,4 +125,4 @@ Florijnruwe 111-2
 6218 CA Maastricht  
 The Netherlands  
 
-More about the license can be found at: [https://laravel-excel.maatwebsite.nl/3.1/getting-started/license.html](https://laravel-excel.maatwebsite.nl/3.1/getting-started/license.html)
+More about the license can be found at: [https://docs.laravel-excel.com/3.1/getting-started/license.html](https://docs.laravel-excel.com/3.1/getting-started/license.html)
