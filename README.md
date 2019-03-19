@@ -108,21 +108,31 @@ class User extends Resource
 
 More installation instructions can be found at: [https://docs.laravel-excel.com/nova/1.1/getting-started/installation.html](https://docs.laravel-excel.com/nova/1.1/getting-started/installation.html)
 
-## 🎓 Learning Laravel Nova Excel
+## 🎓 Learning Laravel Excel
 
-You can find the full documentation of Laravel Nova Excel [on the website](https://docs.laravel-excel.com/nova/1.1/).
+You can find the full documentation of Laravel Nova Excel [on the website](https://docs.laravel-excel.com/nova).
 
 We welcome suggestions for improving our docs. The documentation repository can be found at [https://github.com/Maatwebsite/laravel-excel-docs](https://github.com/Maatwebsite/laravel-excel-docs).
 
+Some articles and tutorials can be found on our blog: https://medium.com/maatwebsite/laravel-excel/home
+
+## 🎥 Video Course
+
+![1_bzlh2ituv5x7yu2wenhxxw](https://user-images.githubusercontent.com/7728097/53638298-188f9e80-3c26-11e9-82c8-baf057271013.jpeg)
+
+We are currently building a video course called "Advanced Laravel Excel". In this video course we’ll build a small application with real-life, complex imports and exports that go beyond simple user imports and exports. We’ll go step-by-step and tackle implementing Laravel Excel in a performant way.
+
+If you sign up now, you’ll get notified when the course launches and get it for the early bird price of $69 instead of ~~$99~~.
+
 ## :mailbox_with_mail: License & Postcardware
 
-Our software is open source and licensed under the MIT license.
+![1_5nblgs68uarg0wxxejozdq](https://user-images.githubusercontent.com/7728097/53638144-9e5f1a00-3c25-11e9-9f4a-fc71c9d94562.jpg)
 
-If you use the software in your production environment we would appreciate to receive a postcard of your hometown. Please send it to:
+Laravel Excel is completely free (MIT license) to use, however the package is licensed as Postcardware. This means that if it makes it to your production environment, we would very much appreciate receiving a postcard from your hometown.
 
 **Maatwebsite**  
-Florijnruwe 111-2  
-6218 CA Maastricht  
-The Netherlands  
+Markt 2  
+6231 LS Meerssen  
+The Netherlands 
 
 More about the license can be found at: [https://docs.laravel-excel.com/3.1/getting-started/license.html](https://docs.laravel-excel.com/3.1/getting-started/license.html)
