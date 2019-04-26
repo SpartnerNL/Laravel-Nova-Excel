@@ -2,11 +2,11 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Resources;
 
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Resource;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Status;
+use Laravel\Nova\Fields\BelongsTo;
 use Maatwebsite\LaravelNovaExcel\Fields\RetryButton;
 use Maatwebsite\LaravelNovaExcel\Models\Import as ImportModel;
 
@@ -39,7 +39,7 @@ class Import extends Resource
             Text::make('Resource'),
 
             // TODO: get user resource via config
-            Text::make('Imported By', 'user')->resolveUsing(function($user) {
+            Text::make('Imported By', 'user')->resolveUsing(function ($user) {
                 return $user->name;
             }),
 

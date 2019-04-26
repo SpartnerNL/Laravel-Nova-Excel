@@ -11,10 +11,10 @@ class RetryButton extends Field
      *
      * @var string
      */
-    public $component = 'import-retry-button';
+    public $component      = 'import-retry-button';
     public $showOnCreation = false;
-    public $showOnUpdate = false;
-    public $showOnDetail = false;
+    public $showOnUpdate   = false;
+    public $showOnDetail   = false;
 
     /**
      * @param array $arguments

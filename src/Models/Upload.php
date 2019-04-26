@@ -2,8 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -66,11 +66,11 @@ class Upload extends Model
      */
     protected function getFolder()
     {
-        return 'excel_uploads/'.$this->id;
+        return 'excel_uploads/' . $this->id;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected static function boot()
     {

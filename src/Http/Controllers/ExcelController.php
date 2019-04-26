@@ -4,12 +4,12 @@ namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Routing\ResponseFactory;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Routing\ResponseFactory;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\LaravelNovaExcel\Models\Import;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExcelController extends Controller
