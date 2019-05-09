@@ -59,7 +59,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     /**
      * @var Field[]
      */
-    protected $actionFields;
+    protected $actionFields = [];
 
     /**
      * @var callable|null
