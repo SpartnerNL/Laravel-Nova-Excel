@@ -1,21 +1,4 @@
-<p align="center">
-  <a href="https://laravel-excel.maatwebsite.nl">
-    <img alt="Laravel Nova Excel" src="https://user-images.githubusercontent.com/7728097/43685313-ff1e2110-98b0-11e8-8b50-900a2b262f0f.png" />
-  </a>
-</p>
-
-<h1 align="center">
-  Laravel Nova Excel
-</h1>
-
-<h3 align="center">
-  :muscle: :fire: :rocket:
-</h3>
-
-<p align="center">
-  <strong>Supercharge your Laravel Nova resource exports</strong><br>
-  
-</p>
+![banner-nova](https://user-images.githubusercontent.com/7728097/57463699-8df99a00-727b-11e9-8e35-86f0668c6a49.jpg)
 
 <p align="center">
   <a href="https://styleci.io/repos/146120416">
@@ -35,6 +18,9 @@
   </a>
 </p>
 
+
+<h3 align="center">Supercharge your Laravel Nova resource exports</h3>
+
 <h4 align="center">
   <a href="https://docs.laravel-excel.com/nova/1.1/getting-started/">Quickstart</a>
   <span> · </span>
@@ -46,6 +32,8 @@
   <span> · </span>
   <a href="https://docs.laravel-excel.com/3.1/getting-started/support.html">Support</a>
 </h4>
+
+## ✨ Features
 
 - **Easily export resources to Excel.** Supercharge your Nova resources and export them directly to an Excel or CSV document. Exporting has never been so easy.
 
