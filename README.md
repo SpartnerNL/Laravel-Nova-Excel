@@ -1,4 +1,4 @@
-![banner-nova](https://user-images.githubusercontent.com/7728097/57463699-8df99a00-727b-11e9-8e35-86f0668c6a49.jpg)
+![banner-nova](https://user-images.githubusercontent.com/7728097/57463952-16783a80-727c-11e9-87f7-94aae5284bfc.jpg)
 
 <p align="center">
   <a href="https://styleci.io/repos/146120416">
