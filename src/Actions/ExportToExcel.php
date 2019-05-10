@@ -72,16 +72,6 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     protected $onFailure;
 
     /**
-     * @var array
-     */
-    protected $serializedResources = [];
-
-    /**
-     * @var array
-     */
-    protected $serializedResourcesByModels = [];
-
-    /**
      * Remove some attributes from this class when serializing,
      * so the action can be queued as exportable.
      * Serialize the request, so we keep information about
@@ -95,11 +85,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
             $this->request = SerializedRequest::serialize($this->request);
         }
 
-        // Remember list of all available resources when serializing the job.
-        $this->serializedResources         = Nova::$resources;
-        $this->serializedResourcesByModels = Nova::$resourcesByModel;
-
-        return ['headings', 'except', 'only', 'onlyIndexFields', 'request', 'resource', 'serializedResources'];
+        return ['headings', 'except', 'only', 'onlyIndexFields', 'request', 'resource'];
     }
 
     /**
@@ -111,12 +97,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
             $this->request = $this->request->unserialize();
         }
 
-        // Restore the available resources.
-        Nova::resources($this->serializedResources);
-        Nova::$resourcesByModel = $this->serializedResourcesByModels;
-
-        $this->serializedResources         = [];
-        $this->serializedResourcesByModels = [];
+        Nova::resourcesIn(app_path('Nova'));
     }
 
     /**
