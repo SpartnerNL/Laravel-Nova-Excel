@@ -22,7 +22,6 @@ use Maatwebsite\LaravelNovaExcel\Concerns\WithFilename;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithHeadings;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithChunkCount;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
-use Maatwebsite\LaravelNovaExcel\Requests\SerializedRequest;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForWriterType;
