@@ -31,7 +31,7 @@ interface ExportActionRequest
      * @param string      $attribute
      * @param string|null $default
      *
-     * @return string
+     * @return string|null
      */
-    public function findHeading(string $attribute, string $default = null): string;
+    public function findHeading(string $attribute, string $default = null);
 }
