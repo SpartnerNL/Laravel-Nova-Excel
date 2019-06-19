@@ -8,9 +8,9 @@ trait WithHeadingFinder
      * @param string      $attribute
      * @param string|null $default
      *
-     * @return string
+     * @return string|null
      */
-    public function findHeading(string $attribute, string $default = null): string
+    public function findHeading(string $attribute, string $default = null)
     {
         // In case attribute is used multiple times, grab last Field.
         $field = $this
