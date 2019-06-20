@@ -4,17 +4,6 @@
 
         <card class="flex flex-col p-6 justify-center" style="min-height: 300px">
 
-            <div class="mb-4">
-                <h2 class="py-4">Resource</h2>
-                <p class="pb-4">Choose which resource to import your data into:</p>
-                <div>
-                    <select name="resource" class="block form-control form-select" v-model="resource">
-                        <option value="">- Select a resource -</option>
-                        <option v-for="(label, index) in resources" :value="index">{{ label }}</option>
-                    </select>
-                </div>
-            </div>
-
             <div class="mb-6">
                 <h2 class="py-4">File</h2>
                 <p class="pb-4">Choose the file you want to import:</p>

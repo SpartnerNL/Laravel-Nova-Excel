@@ -12,7 +12,7 @@ Nova.booting((Vue, router) => {
     router.addRoutes([
         {
             name: 'excel-imports-upload',
-            path: '/imports/upload',
+            path: '/imports/:resource/upload',
             component: Upload,
         },
         {
