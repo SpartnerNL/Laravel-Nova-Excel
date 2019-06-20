@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int         $id
  * @property string|null $disk
  * @property string      $path
+ * @property string      filename
  */
 class Upload extends Model
 {
@@ -82,7 +83,7 @@ class Upload extends Model
     public function linkFile(UploadedFile $file)
     {
         $this->update([
-            'path' => $file->store('excel_uploads/'.$this->id, array_filter([
+            'path' => $file->storeAs('excel_uploads/'.$this->id, $this->filename, array_filter([
                 'disk' => $this->disk,
             ])),
         ]);

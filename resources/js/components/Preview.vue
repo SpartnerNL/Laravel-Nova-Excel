@@ -6,12 +6,11 @@
             <div class="p-8">
                 <h2 class="pb-4">Preview</h2>
                 <p class="pb-4">
-                    We were able to discover <b>0</b> column(s) and <b>0</b>
+                    We were able to discover <b>{{ columnCount }}</b> column(s) and <b>{{ rowCount }}</b>
                     row(s) in your data.
                 </p>
                 <p class="pb-4">
-                    Choose a resource to import them into and match up the headings from the CSV to the
-                    appropriate fields of the resource.
+                    Match up the headings from the CSV to the appropriate fields of the resource.
                 </p>
             </div>
         </card>
@@ -23,5 +22,23 @@
         props: [
             'upload'
         ],
+        data() {
+            return {
+                columnCount: 0,
+                rowCount: 0,
+                headings: [],
+                rows: [],
+            }
+        },
+        mounted() {
+            window.Nova.request()
+                .get(`/nova-vendor/maatwebsite/laravel-nova-excel/uploads/${this.upload}/preview`)
+                .then(({data}) => {
+                    this.rows = data.rows;
+                    this.headings = data.headings;
+                    this.rowCount = data.totalRows;
+                    this.columnCount = data.headings.length;
+                });
+        }
     }
 </script>

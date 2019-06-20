@@ -349,9 +349,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['upload']
+  props: ['upload'],
+  data: function data() {
+    return {
+      columnCount: 0,
+      rowCount: 0,
+      headings: [],
+      rows: []
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    window.Nova.request().get("/nova-vendor/maatwebsite/laravel-nova-excel/uploads/".concat(this.upload, "/preview")).then(function (_ref) {
+      var data = _ref.data;
+      _this.rows = data.rows;
+      _this.headings = data.headings;
+      _this.rowCount = data.totalRows;
+      _this.columnCount = data.headings.length;
+    });
+  }
 });
 
 /***/ }),
@@ -11567,15 +11585,15 @@ var render = function() {
           _vm._v(" "),
           _c("p", { staticClass: "pb-4" }, [
             _vm._v("\n                We were able to discover "),
-            _c("b", [_vm._v("0")]),
+            _c("b", [_vm._v(_vm._s(_vm.columnCount))]),
             _vm._v(" column(s) and "),
-            _c("b", [_vm._v("0")]),
+            _c("b", [_vm._v(_vm._s(_vm.rowCount))]),
             _vm._v("\n                row(s) in your data.\n            ")
           ]),
           _vm._v(" "),
           _c("p", { staticClass: "pb-4" }, [
             _vm._v(
-              "\n                Choose a resource to import them into and match up the headings from the CSV to the\n                appropriate fields of the resource.\n            "
+              "\n                Match up the headings from the CSV to the appropriate fields of the resource.\n            "
             )
           ])
         ])
@@ -12066,7 +12084,12 @@ Nova.booting(function (Vue, router) {
   }, {
     name: 'excel-imports-preview',
     path: '/imports/:upload/preview',
-    component: _components_Preview__WEBPACK_IMPORTED_MODULE_1__["default"]
+    component: _components_Preview__WEBPACK_IMPORTED_MODULE_1__["default"],
+    props: function props(route) {
+      return {
+        upload: route.params.upload
+      };
+    }
   }]);
 });
 
