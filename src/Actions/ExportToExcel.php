@@ -22,7 +22,6 @@ use Maatwebsite\LaravelNovaExcel\Concerns\WithFilename;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithHeadings;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithChunkCount;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
-use Maatwebsite\LaravelNovaExcel\Requests\SerializedRequest;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForWriterType;
@@ -59,7 +58,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     /**
      * @var Field[]
      */
-    protected $actionFields;
+    protected $actionFields = [];
 
     /**
      * @var callable|null
@@ -70,54 +69,6 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
      * @var callable|null
      */
     protected $onFailure;
-
-    /**
-     * @var array
-     */
-    protected $serializedResources = [];
-
-    /**
-     * @var array
-     */
-    protected $serializedResourcesByModels = [];
-
-    /**
-     * Remove some attributes from this class when serializing,
-     * so the action can be queued as exportable.
-     * Serialize the request, so we keep information about
-     * the resource and lens in the queued jobs.
-     *
-     * @return array
-     */
-    public function __sleep()
-    {
-        if (!$this->request instanceof SerializedRequest) {
-            $this->request = SerializedRequest::serialize($this->request);
-        }
-
-        // Remember list of all available resources when serializing the job.
-        $this->serializedResources         = Nova::$resources;
-        $this->serializedResourcesByModels = Nova::$resourcesByModel;
-
-        return ['headings', 'except', 'only', 'onlyIndexFields', 'request', 'resource', 'serializedResources'];
-    }
-
-    /**
-     * Unserialize the action.
-     */
-    public function __wakeup()
-    {
-        if ($this->request instanceof SerializedRequest) {
-            $this->request = $this->request->unserialize();
-        }
-
-        // Restore the available resources.
-        Nova::resources($this->serializedResources);
-        Nova::$resourcesByModel = $this->serializedResourcesByModels;
-
-        $this->serializedResources         = [];
-        $this->serializedResourcesByModels = [];
-    }
 
     /**
      * Execute the action for the given request.
