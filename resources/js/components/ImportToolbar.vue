@@ -1,6 +1,6 @@
 <template>
     <div class="flex w-full justify-end items-center mx-3">
-        <button v-if="importAction" @click="modalOpen = true" :to="{name: 'excel-imports-upload', params: {resource: resourceName}}" class="btn btn-default btn-primary" dusk="import-button">
+        <button v-if="importAction" @click="modalOpen = true" class="btn btn-default btn-primary" dusk="import-button">
             <svg width="14" height="14" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path fill="var(--white)" d="M13 5.41V17a1 1 0 0 1-2 0V5.41l-3.3 3.3a1 1 0 0 1-1.4-1.42l5-5a1 1 0 0 1 1.4 0l5 5a1 1 0 1 1-1.4 1.42L13 5.4zM3 17a1 1 0 0 1 2 0v3h14v-3a1 1 0 0 1 2 0v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3z"></path>
             </svg>
@@ -61,13 +61,14 @@
                 this.working = true;
 
                 try {
-                    let {data} = await window.Nova.request().post(
-                        '/nova-vendor/maatwebsite/laravel-nova-excel/upload',
-                        this.form(),
-                        {headers: {'Content-Type': 'multipart/form-data'}}
-                    );
+                    let {data} = await window.Nova.request({
+                        method: 'post',
+                        url: `/nova-vendor/maatwebsite/laravel-nova-excel/${this.resourceName}/upload`,
+                        data: this.form(),
+                        headers: {'Content-Type': 'multipart/form-data'}
+                    });
 
-                    this.$router.push({name: 'excel-imports-preview', params: {import: data.import}});
+                    this.$router.push({name: 'excel-imports-preview', params: {upload: data.upload}});
                 } catch (error) {
                     if (error.response.status === 422) {
                         this.errors = new Errors(error.response.data.errors)

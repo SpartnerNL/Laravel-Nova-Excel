@@ -3,11 +3,11 @@
 namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\ResponseFactory;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Maatwebsite\LaravelNovaExcel\Models\Import;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -17,10 +17,11 @@ class ExcelController extends Controller
     use ValidatesRequests;
 
     /**
-     * @param Request $request
+     * @param Request         $request
      * @param ResponseFactory $response
      *
      * @return BinaryFileResponse
+     * @throws ValidationException
      */
     public function download(Request $request, ResponseFactory $response): BinaryFileResponse
     {
@@ -36,36 +37,24 @@ class ExcelController extends Controller
     }
 
     /**
+     * @param string      $resource
      * @param NovaRequest $request
      *
-     * @throws \Illuminate\Validation\ValidationException
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
+     * @throws ValidationException
      */
-    public function upload(NovaRequest $request)
+    public function upload(string $resource, NovaRequest $request)
     {
-        $this->validate($request, [
+        $validated = $this->validate($request, [
             'file' => 'required|file',
         ]);
 
-        /** @var Import $import */
-        $import = DB::transaction(function () use ($request) {
-            $file = $request->file('file');
+        $upload = Upload::forUploadedFile(
+            $validated['file'],
+            $request->user(),
+            $resource
+        );
 
-            $upload = new Upload([
-                'disk'     => null,
-                'filename' => $file->getClientOriginalName(),
-            ]);
-
-            $upload->user()->associate($request->user());
-            $upload->saveOrFail();
-            $upload->linkFile($file);
-
-            return $upload->imports()->create([
-                'user_id' => $upload->user_id,
-                'status'  => 'waiting',
-            ]);
-        });
-
-        return response()->json(['result' => 'success', 'import' => $import->getKey()]);
+        return response()->json(['result' => 'success', 'upload' => $upload->getKey()]);
     }
 }

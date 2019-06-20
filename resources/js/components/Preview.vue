@@ -21,7 +21,7 @@
 <script>
     export default {
         props: [
-            'import'
+            'upload'
         ],
     }
 </script>

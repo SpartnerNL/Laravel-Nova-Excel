@@ -259,7 +259,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.working = true;
                 _context3.prev = 1;
                 _context3.next = 4;
-                return window.Nova.request().post('/nova-vendor/maatwebsite/laravel-nova-excel/upload', this.form(), {
+                return window.Nova.request({
+                  method: 'post',
+                  url: "/nova-vendor/maatwebsite/laravel-nova-excel/".concat(this.resourceName, "/upload"),
+                  data: this.form(),
                   headers: {
                     'Content-Type': 'multipart/form-data'
                   }
@@ -271,7 +274,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.$router.push({
                   name: 'excel-imports-preview',
                   params: {
-                    "import": _data["import"]
+                    upload: _data.upload
                   }
                 });
                 _context3.next = 12;
@@ -348,7 +351,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['import']
+  props: ['upload']
 });
 
 /***/ }),
@@ -11462,13 +11465,7 @@ var render = function() {
             "button",
             {
               staticClass: "btn btn-default btn-primary",
-              attrs: {
-                to: {
-                  name: "excel-imports-upload",
-                  params: { resource: _vm.resourceName }
-                },
-                dusk: "import-button"
-              },
+              attrs: { dusk: "import-button" },
               on: {
                 click: function($event) {
                   _vm.modalOpen = true
@@ -12068,13 +12065,8 @@ Nova.booting(function (Vue, router) {
     component: _components_Upload__WEBPACK_IMPORTED_MODULE_0__["default"]
   }, {
     name: 'excel-imports-preview',
-    path: '/imports/:import/preview',
-    component: _components_Preview__WEBPACK_IMPORTED_MODULE_1__["default"],
-    props: function props(route) {
-      return {
-        "import": route.params["import"]
-      };
-    }
+    path: '/imports/:upload/preview',
+    component: _components_Preview__WEBPACK_IMPORTED_MODULE_1__["default"]
   }]);
 });
 

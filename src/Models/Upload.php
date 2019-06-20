@@ -2,14 +2,18 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Models;
 
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property int $id
+ * @property int         $id
  * @property string|null $disk
- * @property string $path
+ * @property string      $path
  */
 class Upload extends Model
 {
@@ -24,11 +28,36 @@ class Upload extends Model
     protected $fillable = [
         'disk',
         'filename',
+        'resource',
         'path',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @param UploadedFile $file
+     * @param User         $user
+     * @param null         $resource
+     *
+     * @return static
+     */
+    public static function forUploadedFile(UploadedFile $file, $user, $resource = null)
+    {
+        return DB::transaction(function () use ($resource, $file, $user) {
+            $upload = new static([
+                'disk'     => null,
+                'resource' => $resource,
+                'filename' => $file->getClientOriginalName(),
+            ]);
+
+            $upload->user()->associate($user);
+            $upload->saveOrFail();
+            $upload->linkFile($file);
+
+            return $upload;
+        });
+    }
+
+    /**
+     * @return BelongsTo
      */
     public function user()
     {
@@ -40,7 +69,7 @@ class Upload extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function imports()
     {
@@ -52,21 +81,11 @@ class Upload extends Model
      */
     public function linkFile(UploadedFile $file)
     {
-        $path = $file->store($this->getFolder(), array_filter([
-            'disk' => $this->disk,
-        ]));
-
         $this->update([
-            'path' => $path,
+            'path' => $file->store('excel_uploads/'.$this->id, array_filter([
+                'disk' => $this->disk,
+            ])),
         ]);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getFolder()
-    {
-        return 'excel_uploads/' . $this->id;
     }
 
     /**
@@ -76,7 +95,7 @@ class Upload extends Model
     {
         parent::boot();
 
-        static::deleted(function (Upload $upload) {
+        static::deleted(static function (Upload $upload) {
             Storage::disk($upload->disk)->delete($upload->path);
         });
     }
