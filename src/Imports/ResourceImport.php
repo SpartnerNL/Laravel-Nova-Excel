@@ -5,6 +5,7 @@ namespace Maatwebsite\LaravelNovaExcel\Imports;
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
+use Maatwebsite\LaravelNovaExcel\BelongsToImport;
 use Maatwebsite\LaravelNovaExcel\Models\Import;
 
 class ResourceImport implements ToModel, WithStartRow
@@ -33,9 +34,14 @@ class ResourceImport implements ToModel, WithStartRow
             return [$this->import->mapping[$index] => $column];
         });
 
-        $mapped['password'] = 'test';
+        $model = $this->import->getModelInstance()->newInstance();
+        $model->forceFill($mapped->toArray());
 
-        return $this->import->getModelInstance()->newInstance()->forceFill($mapped->toArray());
+        if (in_array(BelongsToImport::class, trait_uses_recursive($model))) {
+            $model->import()->associate($this->import);
+        }
+
+        return $model;
     }
 
     /**
@@ -43,6 +49,7 @@ class ResourceImport implements ToModel, WithStartRow
      */
     public function startRow(): int
     {
+        // TODO: determine based on if the files has a heading row or not.
         return 2;
     }
 }

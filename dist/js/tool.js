@@ -383,6 +383,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['upload'],
   data: function data() {
@@ -453,8 +455,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
               case 3:
                 this.importing = false;
+                this.$toasted.show('All data imported!', {
+                  type: "success"
+                });
 
-              case 4:
+              case 5:
               case "end":
                 return _context2.stop();
             }
@@ -11792,7 +11797,7 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "bg-30 flex px-8 py-4" }, [
           _c("button", { staticClass: "btn btn-link mr-4" }, [
-            _vm._v("Cancel")
+            _vm._v(_vm._s(_vm.__("Cancel")))
           ]),
           _vm._v(" "),
           _c(
@@ -11802,7 +11807,13 @@ var render = function() {
               attrs: { disabled: _vm.importing, id: "run-import" },
               on: { click: _vm.importRows }
             },
-            [_vm._v("Import")]
+            [
+              _vm._v(
+                "\n                " +
+                  _vm._s(_vm.__("Import")) +
+                  "\n            "
+              )
+            ]
           )
         ])
       ])

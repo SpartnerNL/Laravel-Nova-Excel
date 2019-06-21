@@ -36,8 +36,10 @@
             </table>
 
             <div class="bg-30 flex px-8 py-4">
-                <button class="btn btn-link mr-4">Cancel</button>
-                <button class="btn btn-default btn-primary" @click="importRows" :disabled="importing" id="run-import">Import</button>
+                <button class="btn btn-link mr-4">{{ __('Cancel')}}</button>
+                <button class="btn btn-default btn-primary" @click="importRows" :disabled="importing" id="run-import">
+                    {{ __('Import') }}
+                </button>
             </div>
         </card>
     </div>
@@ -78,6 +80,8 @@
                 });
 
                 this.importing = false;
+
+                this.$toasted.show('All data imported!', {type: "success"});
             }
         },
     }
