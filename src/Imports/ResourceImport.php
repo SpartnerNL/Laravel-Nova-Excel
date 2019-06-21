@@ -5,8 +5,8 @@ namespace Maatwebsite\LaravelNovaExcel\Imports;
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
-use Maatwebsite\LaravelNovaExcel\BelongsToImport;
 use Maatwebsite\LaravelNovaExcel\Models\Import;
+use Maatwebsite\LaravelNovaExcel\BelongsToImport;
 
 class ResourceImport implements ToModel, WithStartRow
 {
