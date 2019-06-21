@@ -3,12 +3,12 @@
 namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\LaravelNovaExcel\Imports\ResourceImport;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\LaravelNovaExcel\Models\Import;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Maatwebsite\LaravelNovaExcel\Imports\ResourceImport;
 
 class UploadsImportsController extends Controller
 {

@@ -2,14 +2,14 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
+use Illuminate\Database\Eloquent\Model;
 
 trait Resourceable
 {
     /**
-     * @return Resource
+     * @return resource
      */
     public function getResourceInstance(): Resource
     {

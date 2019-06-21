@@ -2,13 +2,11 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Nova;
-use Laravel\Nova\Resource;
 use Maatwebsite\Excel\Facades\Excel;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
 use Maatwebsite\LaravelNovaExcel\Imports\PreviewImport;
 
