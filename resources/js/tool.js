@@ -4,8 +4,6 @@ import ImportToolbar from "./components/ImportToolbar";
 import ImportRetryButton from "./components/ImportRetryButton";
 
 Nova.booting((Vue, router) => {
-
-    // TODO: only load on /resources/imports
     Vue.component('custom-index-toolbar', ImportToolbar);
     Vue.component('index-import-retry-button', ImportRetryButton);
 

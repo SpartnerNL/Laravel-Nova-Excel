@@ -12293,7 +12293,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 Nova.booting(function (Vue, router) {
-  // TODO: only load on /resources/imports
   Vue.component('custom-index-toolbar', _components_ImportToolbar__WEBPACK_IMPORTED_MODULE_2__["default"]);
   Vue.component('index-import-retry-button', _components_ImportRetryButton__WEBPACK_IMPORTED_MODULE_3__["default"]);
   router.addRoutes([{
