@@ -5,8 +5,8 @@ namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\LaravelNovaExcel\Imports\PreviewImport;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
+use Maatwebsite\LaravelNovaExcel\Imports\PreviewImport;
 
 class PreviewController extends Controller
 {

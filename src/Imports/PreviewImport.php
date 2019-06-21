@@ -3,9 +3,9 @@
 namespace Maatwebsite\LaravelNovaExcel\Imports;
 
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeImport;
+use Maatwebsite\Excel\Concerns\ToCollection;
 
 class PreviewImport implements ToCollection, WithEvents
 {

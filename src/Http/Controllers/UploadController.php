@@ -2,12 +2,12 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Validation\ValidationException;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class UploadController extends Controller
 {

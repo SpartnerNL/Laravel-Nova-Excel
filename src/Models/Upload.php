@@ -2,13 +2,13 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Models;
 
-use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int         $id
@@ -83,7 +83,7 @@ class Upload extends Model
     public function linkFile(UploadedFile $file)
     {
         $this->update([
-            'path' => $file->storeAs('excel_uploads/'.$this->id, $this->filename, array_filter([
+            'path' => $file->storeAs('excel_uploads/' . $this->id, $this->filename, array_filter([
                 'disk' => $this->disk,
             ])),
         ]);
