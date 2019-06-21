@@ -3,19 +3,24 @@
 namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Nova;
+use Laravel\Nova\Resource;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
 use Maatwebsite\LaravelNovaExcel\Imports\PreviewImport;
 
-class PreviewController extends Controller
+class UploadsPreviewsController extends Controller
 {
     /**
-     * @param Upload $upload
+     * @param Upload      $upload
+     * @param NovaRequest $request
      *
      * @return JsonResponse
      */
-    public function show(Upload $upload)
+    public function show(Upload $upload, NovaRequest $request)
     {
         $import = new PreviewImport();
         Excel::import($import, $upload->path, $upload->disk);
@@ -24,6 +29,7 @@ class PreviewController extends Controller
             'totalRows' => $import->totalRows,
             'headings'  => $import->headings,
             'rows'      => $import->rows,
+            'fields'    => $upload->getResourceInstance()->creationFields($request),
         ]);
     }
 }

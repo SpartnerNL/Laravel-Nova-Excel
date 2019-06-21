@@ -9,7 +9,7 @@ use Illuminate\Validation\ValidationException;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
-class UploadController extends Controller
+class UploadsController extends Controller
 {
     use ValidatesRequests;
 

@@ -15,9 +15,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $disk
  * @property string      $path
  * @property string      filename
+ * @property string      resource
+ * @property User        user
  */
 class Upload extends Model
 {
+    use Resourceable;
+
     /**
      * @var string
      */

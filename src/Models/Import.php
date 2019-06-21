@@ -2,10 +2,18 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Models;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property array  mapping
+ * @property Upload upload
+ */
 class Import extends Model
 {
+    use Resourceable;
+
     /**
      * @var string
      */
@@ -17,11 +25,41 @@ class Import extends Model
     protected $fillable = [
         'user_id',
         'resource',
+        'mapping',
         'status',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @var array
+     */
+    protected $casts = [
+        'mapping' => 'array',
+    ];
+
+    /**
+     * @param Upload $upload
+     * @param array  $mapping
+     *
+     * @return Import
+     */
+    public static function fromUpload(Upload $upload, array $mapping): Import
+    {
+        return DB::transaction(function () use ($upload, $mapping) {
+            $import = new static([
+                'mapping'  => $mapping,
+                'resource' => $upload->resource,
+            ]);
+
+            $import->upload()->associate($upload);
+            $import->user()->associate($upload->user);
+            $import->saveOrFail();
+
+            return $import;
+        });
+    }
+
+    /**
+     * @return BelongsTo
      */
     public function user()
     {
@@ -33,7 +71,7 @@ class Import extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function upload()
     {
