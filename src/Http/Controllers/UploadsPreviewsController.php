@@ -2,13 +2,11 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
-use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Maatwebsite\Excel\Validators\ValidationException;
+use Illuminate\Contracts\Support\Responsable;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
 use Maatwebsite\LaravelNovaExcel\Imports\PreviewImport;
 

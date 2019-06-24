@@ -2,8 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
-use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Resource;
+use Laravel\Nova\Actions\Action;
 use Maatwebsite\LaravelNovaExcel\Actions\ImportExcel;
 
 trait BelongsToAction
@@ -19,7 +19,7 @@ trait BelongsToAction
     }
 
     /**
-     * @return Resource
+     * @return resource
      */
     abstract protected function resource();
 }

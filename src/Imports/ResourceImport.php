@@ -6,15 +6,15 @@ use Laravel\Nova\Resource;
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Maatwebsite\Excel\Concerns\WithBatchInserts;
-use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\LaravelNovaExcel\Concerns\BelongsToAction;
 use Maatwebsite\LaravelNovaExcel\Models\Import;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\LaravelNovaExcel\Concerns\BelongsToAction;
+use Maatwebsite\LaravelNovaExcel\Concerns\WithRowValidation;
 use Maatwebsite\LaravelNovaExcel\Concerns\KeepsTrackOfImport;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithColumnMappings;
-use Maatwebsite\LaravelNovaExcel\Concerns\WithRowValidation;
 
 class ResourceImport implements ToModel, WithStartRow, WithBatchInserts, WithChunkReading, WithValidation
 {
@@ -64,7 +64,7 @@ class ResourceImport implements ToModel, WithStartRow, WithBatchInserts, WithChu
             );
 
         // TMP
-        $model['name'] = 'test';
+        $model['name']     = 'test';
         $model['password'] = 'test';
 
         if ($this->shouldKeepTrackOfImport($model)) {
@@ -103,7 +103,7 @@ class ResourceImport implements ToModel, WithStartRow, WithBatchInserts, WithChu
     }
 
     /**
-     * @return Resource
+     * @return resource
      */
     protected function resource()
     {

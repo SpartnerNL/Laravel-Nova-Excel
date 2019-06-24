@@ -33,7 +33,7 @@ trait WithColumnMappings
     protected function columnToAttribute(int $column): ?string
     {
         if (!array_key_exists($column, $this->import->mapping)) {
-            throw new InvalidArgumentException("Column {$column} does not exist in mapping ".json_encode($this->import->mapping));
+            throw new InvalidArgumentException("Column {$column} does not exist in mapping " . json_encode($this->import->mapping));
         }
 
         return $this->import->mapping[$column];
@@ -49,7 +49,7 @@ trait WithColumnMappings
         $mapping = array_flip(array_filter($this->import->mapping));
 
         if (!array_key_exists($attribute, $mapping)) {
-            throw new InvalidArgumentException("Attribute {$attribute} does not exist in mapping ".json_encode($mapping));
+            throw new InvalidArgumentException("Attribute {$attribute} does not exist in mapping " . json_encode($mapping));
         }
 
         return $mapping[$attribute];
@@ -63,8 +63,8 @@ trait WithColumnMappings
     protected function attributeToField(string $attribute)
     {
         return optional(collect($this->resource()->fields($this->request))->first(function (Field $field) use ($attribute) {
-                return $field->attribute === $attribute;
-            }))->name ?? $attribute;
+            return $field->attribute === $attribute;
+        }))->name ?? $attribute;
     }
 
     /**

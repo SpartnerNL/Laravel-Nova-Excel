@@ -2,7 +2,6 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
-use Laravel\Nova\Fields\Field;
 use Throwable;
 use Laravel\Nova\Resource;
 
@@ -21,6 +20,18 @@ trait WithRowValidation
     }
 
     /**
+     * @return array
+     */
+    public function customValidationAttributes(): array
+    {
+        return collect($this->import->mapping)->filter()->mapWithKeys(function (string $attribute, int $index) {
+            return [
+                $index => $this->attributeToField($attribute),
+            ];
+        })->all();
+    }
+
+    /**
      * @param string $attribute
      *
      * @return array
@@ -35,19 +46,7 @@ trait WithRowValidation
     }
 
     /**
-     * @return array
-     */
-    public function customValidationAttributes(): array
-    {
-        return collect($this->import->mapping)->filter()->mapWithKeys(function (string $attribute, int $index) {
-            return [
-                $index => $this->attributeToField($attribute),
-            ];
-        })->all();
-    }
-
-    /**
-     * @return Resource
+     * @return resource
      */
     abstract protected function resource();
 }

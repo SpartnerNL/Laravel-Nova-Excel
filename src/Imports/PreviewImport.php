@@ -2,18 +2,18 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Imports;
 
-use Illuminate\Contracts\Support\Responsable;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Resource;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeImport;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use Maatwebsite\LaravelNovaExcel\Concerns\BelongsToAction;
-use Maatwebsite\LaravelNovaExcel\Models\Upload;
+use Illuminate\Contracts\Support\Responsable;
 use Symfony\Component\HttpFoundation\Response;
+use Maatwebsite\LaravelNovaExcel\Models\Upload;
+use Maatwebsite\LaravelNovaExcel\Concerns\BelongsToAction;
 
 class PreviewImport implements ToCollection, WithEvents, Responsable
 {
@@ -82,14 +82,6 @@ class PreviewImport implements ToCollection, WithEvents, Responsable
     }
 
     /**
-     * @return Resource
-     */
-    protected function resource()
-    {
-        return $this->upload->getResourceInstance();
-    }
-
-    /**
      * @param Request $request
      *
      * @return Response
@@ -102,5 +94,13 @@ class PreviewImport implements ToCollection, WithEvents, Responsable
             'totalRows' => $this->totalRows,
             'fields'    => $this->resource()->creationFields($this->request),
         ]);
+    }
+
+    /**
+     * @return resource
+     */
+    protected function resource()
+    {
+        return $this->upload->getResourceInstance();
     }
 }
