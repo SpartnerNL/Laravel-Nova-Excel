@@ -12,6 +12,15 @@
                 <p class="pb-4">
                     Match up the headings from the file to the appropriate fields of the resource.
                 </p>
+
+                <div v-if="errorMessage" class="bg-danger-light border border-danger-dark text-danger-dark px-4 py-3 rounded relative" role="alert">
+                    <div class="font-bold mb-4">{{ errorMessage }}</div>
+                    <ul class="pl-6" v-if="errors.length > 0">
+                        <li v-for="error in errors" :key="error.row">
+                            {{ __('Error on row :row.', {row: error.row})}}&nbsp;{{ error.message }}
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <table class="table w-full">
@@ -23,7 +32,7 @@
                 <tbody>
                 <tr>
                     <td v-for="(heading, headingIndex) in headings" :key="headingIndex" class="text-center">
-                        <select class="w-full form-control form-select" v-model="mapping[headingIndex]">
+                         <select class="w-full form-control form-select" v-model="mapping[headingIndex]">
                             <option value="">- {{ __('Ignore this column') }} -</option>
                             <option v-for="field in fields" :key="field.attribute" :value="field.attribute">{{ field.name }}</option>
                         </select>
@@ -59,6 +68,8 @@
                 fields: [],
                 mapping: {},
                 importing: false,
+                errors: [],
+                errorMessage: null,
             }
         },
         async mounted() {
@@ -69,19 +80,31 @@
             this.fields = fields;
             this.headings = headings;
             this.rowCount = totalRows;
-            this.columnCount = headings.length;
+            this.columnCount = rows[0].length;
+
+            this.headings.map((value, key) => {
+                this.mapping[key] = '';
+            })
         },
         methods: {
             async importRows() {
                 this.importing = true;
+                this.errors = [];
+                this.errorMessage = null;
 
-                await window.Nova.request().post(`/nova-vendor/maatwebsite/laravel-nova-excel/uploads/${this.upload}/import`, {
-                    mapping: this.mapping,
-                });
+                try {
+                    await window.Nova.request().post(`/nova-vendor/maatwebsite/laravel-nova-excel/uploads/${this.upload}/import`, {
+                        mapping: this.mapping,
+                    });
 
-                this.importing = false;
-
-                this.$toasted.show('All data imported!', {type: "success"});
+                    this.$toasted.show('All data imported!', {type: "success"});
+                    this.importing = false;
+                } catch ({response: {data: {errors, message}}}) {
+                    this.$toasted.show(message, {type: "error"});
+                    this.errorMessage = message;
+                    this.errors = errors;
+                    this.importing = false;
+                }
             }
         },
     }

@@ -385,6 +385,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['upload'],
   data: function data() {
@@ -395,13 +404,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       rows: [],
       fields: [],
       mapping: {},
-      importing: false
+      importing: false,
+      errors: [],
+      errorMessage: null
     };
   },
   mounted: function () {
     var _mounted = _asyncToGenerator(
     /*#__PURE__*/
     _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var _this = this;
+
       var _ref, _ref$data, rows, headings, totalRows, fields;
 
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
@@ -422,9 +435,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               this.fields = fields;
               this.headings = headings;
               this.rowCount = totalRows;
-              this.columnCount = headings.length;
+              this.columnCount = rows[0].length;
+              this.headings.map(function (value, key) {
+                _this.mapping[key] = '';
+              });
 
-            case 13:
+            case 14:
             case "end":
               return _context.stop();
           }
@@ -443,28 +459,48 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _importRows = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        var _ref2$response$data, errors, message;
+
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
                 this.importing = true;
-                _context2.next = 3;
+                this.errors = [];
+                this.errorMessage = null;
+                _context2.prev = 3;
+                _context2.next = 6;
                 return window.Nova.request().post("/nova-vendor/maatwebsite/laravel-nova-excel/uploads/".concat(this.upload, "/import"), {
                   mapping: this.mapping
                 });
 
-              case 3:
-                this.importing = false;
+              case 6:
                 this.$toasted.show('All data imported!', {
                   type: "success"
                 });
+                this.importing = false;
+                _context2.next = 19;
+                break;
 
-              case 5:
+              case 10:
+                _context2.prev = 10;
+                _context2.t0 = _context2["catch"](3);
+                _ref2$response$data = _context2.t0.response.data;
+                errors = _ref2$response$data.errors;
+                message = _ref2$response$data.message;
+                this.$toasted.show(message, {
+                  type: "error"
+                });
+                this.errorMessage = message;
+                this.errors = errors;
+                this.importing = false;
+
+              case 19:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this);
+        }, _callee2, this, [[3, 10]]);
       }));
 
       function importRows() {
@@ -11616,13 +11652,7 @@ var render = function() {
                 ]
               ),
               _vm._v(" "),
-              _c("span", [
-                _vm._v(
-                  _vm._s(_vm.__("Import")) +
-                    " " +
-                    _vm._s(_vm.__(_vm.resourceInformation.label))
-                )
-              ])
+              _c("span", [_vm._v(_vm._s(_vm.importAction.name))])
             ]
           )
         : _vm._e(),
@@ -11699,7 +11729,46 @@ var render = function() {
             _vm._v(
               "\n                Match up the headings from the file to the appropriate fields of the resource.\n            "
             )
-          ])
+          ]),
+          _vm._v(" "),
+          _vm.errorMessage
+            ? _c(
+                "div",
+                {
+                  staticClass:
+                    "bg-danger-light border border-danger-dark text-danger-dark px-4 py-3 rounded relative",
+                  attrs: { role: "alert" }
+                },
+                [
+                  _c("div", { staticClass: "font-bold mb-4" }, [
+                    _vm._v(_vm._s(_vm.errorMessage))
+                  ]),
+                  _vm._v(" "),
+                  _vm.errors.length > 0
+                    ? _c(
+                        "ul",
+                        { staticClass: "pl-6" },
+                        _vm._l(_vm.errors, function(error) {
+                          return _c("li", { key: error.row }, [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(
+                                  _vm.__("Error on row :row.", {
+                                    row: error.row
+                                  })
+                                ) +
+                                " " +
+                                _vm._s(error.message) +
+                                "\n                    "
+                            )
+                          ])
+                        }),
+                        0
+                      )
+                    : _vm._e()
+                ]
+              )
+            : _vm._e()
         ]),
         _vm._v(" "),
         _c("table", { staticClass: "table w-full" }, [

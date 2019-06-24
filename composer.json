@@ -17,6 +17,7 @@
     }
   ],
   "require": {
+    "ext-json": "*",
     "php": ">=7.1.0",
     "laravel/nova": "*",
     "maatwebsite/excel": "^3.1"

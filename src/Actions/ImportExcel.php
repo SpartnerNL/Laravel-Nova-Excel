@@ -7,13 +7,52 @@ use Laravel\Nova\Actions\Action;
 
 class ImportExcel extends Action
 {
-    public function __construct()
+    /**
+     * @var bool
+     */
+    protected $headingRow = true;
+
+    /**
+     * @param string|null $name
+     */
+    public function __construct(string $name = null)
     {
+        $this->name = $name;
         $this->withoutActionEvents();
         $this->withoutConfirmation();
         $this->onlyOnDetail(false);
         $this->onlyOnIndex(false);
         $this->availableForEntireResource(false);
+    }
+
+    /**
+     * @param string|null $name
+     *
+     * @return ImportExcel
+     */
+    public static function make(string $name = null)
+    {
+        return new static($name);
+    }
+
+    /**
+     * @param bool $uses
+     *
+     * @return $this
+     */
+    public function usingHeadingRow(bool $uses)
+    {
+        $this->headingRow = $uses;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function usesHeadingRow(): bool
+    {
+        return $this->headingRow;
     }
 
     /**

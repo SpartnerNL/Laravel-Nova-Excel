@@ -2,25 +2,45 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Imports;
 
+use Laravel\Nova\Resource;
 use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Maatwebsite\Excel\Concerns\WithBatchInserts;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithStartRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\LaravelNovaExcel\Concerns\BelongsToAction;
 use Maatwebsite\LaravelNovaExcel\Models\Import;
-use Maatwebsite\LaravelNovaExcel\BelongsToImport;
+use Maatwebsite\LaravelNovaExcel\Concerns\KeepsTrackOfImport;
+use Maatwebsite\LaravelNovaExcel\Concerns\WithColumnMappings;
+use Maatwebsite\LaravelNovaExcel\Concerns\WithRowValidation;
 
-class ResourceImport implements ToModel, WithStartRow
+class ResourceImport implements ToModel, WithStartRow, WithBatchInserts, WithChunkReading, WithValidation
 {
+    use BelongsToAction;
+    use WithRowValidation;
+    use KeepsTrackOfImport;
+    use WithColumnMappings;
+
     /**
      * @var Import
      */
-    private $import;
+    protected $import;
 
     /**
-     * @param Import $import
+     * @var NovaRequest
      */
-    public function __construct(Import $import)
+    protected $request;
+
+    /**
+     * @param Import      $import
+     * @param NovaRequest $request
+     */
+    public function __construct(Import $import, NovaRequest $request)
     {
-        $this->import = $import;
+        $this->import  = $import;
+        $this->request = $request;
     }
 
     /**
@@ -30,15 +50,25 @@ class ResourceImport implements ToModel, WithStartRow
      */
     public function model(array $row)
     {
-        $mapped = collect($row)->mapWithKeys(function ($column, $index) {
-            return [$this->import->mapping[$index] => $column];
-        });
+        $attributes = $this->mapRowToAttributes($row);
 
-        $model = $this->import->getModelInstance()->newInstance();
-        $model->forceFill($mapped->toArray());
+        if (count(array_filter($attributes)) === 0) {
+            return null;
+        }
 
-        if (in_array(BelongsToImport::class, trait_uses_recursive($model))) {
-            $model->import()->associate($this->import);
+        $model = $this->import
+            ->getModelInstance()
+            ->newInstance()
+            ->forceFill(
+                $this->mapRowToAttributes($row)
+            );
+
+        // TMP
+        $model['name'] = 'test';
+        $model['password'] = 'test';
+
+        if ($this->shouldKeepTrackOfImport($model)) {
+            $this->associateImport($model);
         }
 
         return $model;
@@ -49,7 +79,34 @@ class ResourceImport implements ToModel, WithStartRow
      */
     public function startRow(): int
     {
-        // TODO: determine based on if the files has a heading row or not.
-        return 2;
+        if ($this->action()->usesHeadingRow()) {
+            return 2;
+        }
+
+        return 1;
+    }
+
+    /**
+     * @return int
+     */
+    public function batchSize(): int
+    {
+        return 6000;
+    }
+
+    /**
+     * @return int
+     */
+    public function chunkSize(): int
+    {
+        return 6000;
+    }
+
+    /**
+     * @return Resource
+     */
+    protected function resource()
+    {
+        return $this->import->getResourceInstance();
     }
 }
