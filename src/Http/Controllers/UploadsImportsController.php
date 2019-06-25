@@ -2,18 +2,18 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
+use Laravel\Nova\Resource;
+use Maatwebsite\Excel\Importer;
+use Laravel\Nova\Actions\Action;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
-use Laravel\Nova\Actions\Action;
-use Laravel\Nova\Resource;
-use Maatwebsite\Excel\Importer;
 use Maatwebsite\Excel\Validators\Failure;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Maatwebsite\LaravelNovaExcel\Actions\ImportExcel;
 use Maatwebsite\LaravelNovaExcel\Models\Import;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
 use Maatwebsite\Excel\Validators\ValidationException;
+use Maatwebsite\LaravelNovaExcel\Actions\ImportExcel;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class UploadsImportsController extends Controller
@@ -70,6 +70,19 @@ class UploadsImportsController extends Controller
     }
 
     /**
+     * @param resource    $resource
+     * @param NovaRequest $request
+     *
+     * @return ImportExcel
+     */
+    protected function action(Resource $resource, NovaRequest $request)
+    {
+        return collect($resource->actions($request))->first(function (Action $action) {
+            return $action instanceof ImportExcel;
+        });
+    }
+
+    /**
      * @param ValidationException $e
      *
      * @return Collection
@@ -84,18 +97,5 @@ class UploadsImportsController extends Controller
                 'message' => $row->flatMap->errors()->implode(' '),
             ];
         })->values();
-    }
-
-    /**
-     * @param Resource    $resource
-     * @param NovaRequest $request
-     *
-     * @return ImportExcel
-     */
-    protected function action(Resource $resource, NovaRequest $request)
-    {
-        return collect($resource->actions($request))->first(function (Action $action) {
-            return $action instanceof ImportExcel;
-        });
     }
 }

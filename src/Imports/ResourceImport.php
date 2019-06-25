@@ -69,18 +69,6 @@ class ResourceImport implements ToModel, WithStartRow, WithBatchInserts, WithChu
     }
 
     /**
-     * @param array $row
-     *
-     * @return array|null
-     */
-    protected function map(array $row): ?array
-    {
-        return ($this->action()->getMap())(
-            $this->mapRowToAttributes($row)
-        );
-    }
-
-    /**
      * @return int
      */
     public function startRow(): int
@@ -106,6 +94,18 @@ class ResourceImport implements ToModel, WithStartRow, WithBatchInserts, WithChu
     public function chunkSize(): int
     {
         return 6000;
+    }
+
+    /**
+     * @param array $row
+     *
+     * @return array|null
+     */
+    protected function map(array $row): ?array
+    {
+        return ($this->action()->getMap())(
+            $this->mapRowToAttributes($row)
+        );
     }
 
     /**

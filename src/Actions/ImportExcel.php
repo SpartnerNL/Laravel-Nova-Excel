@@ -5,8 +5,8 @@ namespace Maatwebsite\LaravelNovaExcel\Actions;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Maatwebsite\LaravelNovaExcel\Imports\ResourceImport;
 use Maatwebsite\LaravelNovaExcel\Models\Import;
+use Maatwebsite\LaravelNovaExcel\Imports\ResourceImport;
 
 class ImportExcel extends Action
 {
@@ -137,8 +137,8 @@ class ImportExcel extends Action
     public function getMap(): callable
     {
         return $this->map ?? function ($attributes) {
-                return $attributes;
-            };
+            return $attributes;
+        };
     }
 
     /**

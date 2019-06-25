@@ -6,8 +6,8 @@ use Laravel\Nova\Resource;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithLimit;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\BeforeImport;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -97,14 +97,6 @@ class PreviewImport implements ToCollection, WithLimit, WithEvents, Responsable
     }
 
     /**
-     * @return resource
-     */
-    protected function resource()
-    {
-        return $this->upload->getResourceInstance();
-    }
-
-    /**
      * @return int
      */
     public function limit(): int
@@ -112,5 +104,13 @@ class PreviewImport implements ToCollection, WithLimit, WithEvents, Responsable
         $previewRows = $this->action()->getPreviewRows();
 
         return $this->action()->usesHeadingRow() ? $previewRows + 1 : $previewRows;
+    }
+
+    /**
+     * @return resource
+     */
+    protected function resource()
+    {
+        return $this->upload->getResourceInstance();
     }
 }
