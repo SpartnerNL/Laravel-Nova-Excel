@@ -488,12 +488,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _ref2$response$data = _context2.t0.response.data;
                 errors = _ref2$response$data.errors;
                 message = _ref2$response$data.message;
+                this.importing = false;
                 this.$toasted.show(message, {
                   type: "error"
                 });
                 this.errorMessage = message;
-                this.errors = errors;
-                this.importing = false;
+                this.errors = typeof errors !== 'undefined' ? errors : [];
 
               case 19:
               case "end":

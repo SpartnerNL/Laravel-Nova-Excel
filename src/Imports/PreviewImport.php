@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithLimit;
 use Maatwebsite\Excel\Events\BeforeImport;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -15,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
 use Maatwebsite\LaravelNovaExcel\Concerns\BelongsToAction;
 
-class PreviewImport implements ToCollection, WithEvents, Responsable
+class PreviewImport implements ToCollection, WithLimit, WithEvents, Responsable
 {
     use BelongsToAction;
 
@@ -65,8 +66,7 @@ class PreviewImport implements ToCollection, WithEvents, Responsable
             $this->headings = $collection->first()->keys();
         }
 
-        // TODO: implement a ReadFilter to only read the first 10 rows of the spreadsheet.
-        $this->rows = $collection->take(10)->all();
+        $this->rows = $collection->all();
     }
 
     /**
@@ -102,5 +102,15 @@ class PreviewImport implements ToCollection, WithEvents, Responsable
     protected function resource()
     {
         return $this->upload->getResourceInstance();
+    }
+
+    /**
+     * @return int
+     */
+    public function limit(): int
+    {
+        $previewRows = $this->action()->getPreviewRows();
+
+        return $this->action()->usesHeadingRow() ? $previewRows + 1 : $previewRows;
     }
 }

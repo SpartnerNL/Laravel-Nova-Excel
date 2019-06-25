@@ -4,6 +4,9 @@ namespace Maatwebsite\LaravelNovaExcel\Actions;
 
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Maatwebsite\LaravelNovaExcel\Imports\ResourceImport;
+use Maatwebsite\LaravelNovaExcel\Models\Import;
 
 class ImportExcel extends Action
 {
@@ -11,6 +14,21 @@ class ImportExcel extends Action
      * @var bool
      */
     protected $headingRow = true;
+
+    /**
+     * @var int
+     */
+    protected $previewRows = 10;
+
+    /**
+     * @var callable
+     */
+    protected $usingImport;
+
+    /**
+     * @var callable|null
+     */
+    protected $map;
 
     /**
      * @param string|null $name
@@ -23,6 +41,9 @@ class ImportExcel extends Action
         $this->onlyOnDetail(false);
         $this->onlyOnIndex(false);
         $this->availableForEntireResource(false);
+        $this->usingImport(function ($import, $request) {
+            return new ResourceImport($import, $request);
+        });
     }
 
     /**
@@ -33,6 +54,29 @@ class ImportExcel extends Action
     public static function make(string $name = null)
     {
         return new static($name);
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return $this
+     */
+    public function usingImport(callable $callback)
+    {
+        $this->usingImport = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param Import      $import
+     * @param NovaRequest $request
+     *
+     * @return ResourceImport
+     */
+    public function getImportObject(Import $import, NovaRequest $request)
+    {
+        return ($this->usingImport)($import, $request);
     }
 
     /**
@@ -53,6 +97,48 @@ class ImportExcel extends Action
     public function usesHeadingRow(): bool
     {
         return $this->headingRow;
+    }
+
+    /**
+     * @param int $rows
+     *
+     * @return ImportExcel
+     */
+    public function previewRows(int $rows)
+    {
+        $this->previewRows = $rows;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPreviewRows(): int
+    {
+        return $this->previewRows;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return ImportExcel
+     */
+    public function map(callable $callback)
+    {
+        $this->map = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @return callable
+     */
+    public function getMap(): callable
+    {
+        return $this->map ?? function ($attributes) {
+                return $attributes;
+            };
     }
 
     /**

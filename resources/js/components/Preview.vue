@@ -32,7 +32,7 @@
                 <tbody>
                 <tr>
                     <td v-for="(heading, headingIndex) in headings" :key="headingIndex" class="text-center">
-                         <select class="w-full form-control form-select" v-model="mapping[headingIndex]">
+                        <select class="w-full form-control form-select" v-model="mapping[headingIndex]">
                             <option value="">- {{ __('Ignore this column') }} -</option>
                             <option v-for="field in fields" :key="field.attribute" :value="field.attribute">{{ field.name }}</option>
                         </select>
@@ -100,10 +100,10 @@
                     this.$toasted.show('All data imported!', {type: "success"});
                     this.importing = false;
                 } catch ({response: {data: {errors, message}}}) {
+                    this.importing = false;
                     this.$toasted.show(message, {type: "error"});
                     this.errorMessage = message;
-                    this.errors = errors;
-                    this.importing = false;
+                    this.errors = typeof errors !== 'undefined' ? errors : [];
                 }
             }
         },

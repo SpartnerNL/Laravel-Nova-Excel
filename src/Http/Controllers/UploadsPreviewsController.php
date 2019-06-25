@@ -2,9 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Maatwebsite\Excel\Importer;
 use Illuminate\Routing\Controller;
-use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Illuminate\Contracts\Support\Responsable;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
@@ -15,14 +14,19 @@ class UploadsPreviewsController extends Controller
     /**
      * @param Upload      $upload
      * @param NovaRequest $request
+     * @param Importer    $importer
      *
      * @return Responsable
      */
-    public function show(Upload $upload, NovaRequest $request)
+    public function show(Upload $upload, NovaRequest $request, Importer $importer)
     {
         $import = new PreviewImport($upload, $request);
 
-        Excel::import($import, $upload->path, $upload->disk);
+        $importer->import(
+            $import,
+            $upload->path,
+            $upload->disk
+        );
 
         return $import;
     }

@@ -5,26 +5,34 @@ namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Facades\Excel;
+use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Resource;
+use Maatwebsite\Excel\Importer;
 use Maatwebsite\Excel\Validators\Failure;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Maatwebsite\LaravelNovaExcel\Actions\ImportExcel;
 use Maatwebsite\LaravelNovaExcel\Models\Import;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
 use Maatwebsite\Excel\Validators\ValidationException;
 use Illuminate\Foundation\Validation\ValidatesRequests;
-use Maatwebsite\LaravelNovaExcel\Imports\ResourceImport;
 
 class UploadsImportsController extends Controller
 {
     use ValidatesRequests;
 
     /**
+     * @var Import
+     */
+    protected $import;
+
+    /**
      * @param Upload      $upload
      * @param NovaRequest $request
+     * @param Importer    $importer
      *
      * @return JsonResponse
      */
-    public function store(Upload $upload, NovaRequest $request)
+    public function store(Upload $upload, NovaRequest $request, Importer $importer)
     {
         $import = Import::fromUpload(
             $upload,
@@ -36,18 +44,18 @@ class UploadsImportsController extends Controller
         ]);
 
         try {
-            Excel::import(
-                new ResourceImport($import, $request),
+            $importer->import(
+                $this->action($import->getResourceInstance(), $request)->getImportObject($import, $request),
                 $import->upload->path,
                 $import->upload->disk
             );
 
             $import->update([
-                'status' => 'completed',
+                'status' => Import::STATUS_COMPLETED,
             ]);
         } catch (ValidationException $e) {
             $import->update([
-                'status' => 'failed',
+                'status' => Import::STATUS_FAILED,
             ]);
 
             return new JsonResponse([
@@ -76,5 +84,18 @@ class UploadsImportsController extends Controller
                 'message' => $row->flatMap->errors()->implode(' '),
             ];
         })->values();
+    }
+
+    /**
+     * @param Resource    $resource
+     * @param NovaRequest $request
+     *
+     * @return ImportExcel
+     */
+    protected function action(Resource $resource, NovaRequest $request)
+    {
+        return collect($resource->actions($request))->first(function (Action $action) {
+            return $action instanceof ImportExcel;
+        });
     }
 }

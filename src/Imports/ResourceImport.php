@@ -50,7 +50,7 @@ class ResourceImport implements ToModel, WithStartRow, WithBatchInserts, WithChu
      */
     public function model(array $row)
     {
-        $attributes = $this->mapRowToAttributes($row);
+        $attributes = $this->map($row);
 
         if (count(array_filter($attributes)) === 0) {
             return null;
@@ -59,19 +59,25 @@ class ResourceImport implements ToModel, WithStartRow, WithBatchInserts, WithChu
         $model = $this->import
             ->getModelInstance()
             ->newInstance()
-            ->forceFill(
-                $this->mapRowToAttributes($row)
-            );
-
-        // TMP
-        $model['name']     = 'test';
-        $model['password'] = 'test';
+            ->forceFill($attributes);
 
         if ($this->shouldKeepTrackOfImport($model)) {
             $this->associateImport($model);
         }
 
         return $model;
+    }
+
+    /**
+     * @param array $row
+     *
+     * @return array|null
+     */
+    protected function map(array $row): ?array
+    {
+        return ($this->action()->getMap())(
+            $this->mapRowToAttributes($row)
+        );
     }
 
     /**

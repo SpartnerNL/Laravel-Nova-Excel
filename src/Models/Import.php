@@ -15,6 +15,26 @@ class Import extends Model
     use Resourceable;
 
     /**
+     * @const string
+     */
+    public const STATUS_PENDING = 'pending';
+
+    /**
+     * @const string
+     */
+    public const STATUS_RUNNING = 'running';
+
+    /**
+     * @const string
+     */
+    public const STATUS_COMPLETED = 'completed';
+
+    /**
+     * @const string
+     */
+    public const STATUS_FAILED = 'failed';
+
+    /**
      * @var string
      */
     protected $table = 'excel_imports';
@@ -48,6 +68,7 @@ class Import extends Model
             $import = new static([
                 'mapping'  => $mapping,
                 'resource' => $upload->resource,
+                'status'   => Import::STATUS_PENDING,
             ]);
 
             $import->upload()->associate($upload);
