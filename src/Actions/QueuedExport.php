@@ -11,7 +11,10 @@ class QueuedExport extends ExportToExcel implements ShouldQueue
     /**
      * @var string
      */
-    public $name = 'Export to Excel';
+    public function name()
+    {
+        return __('Export to Excel');
+    }
 
     /**
      * Remove some attributes from this class when serializing,
