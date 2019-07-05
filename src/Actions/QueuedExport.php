@@ -9,14 +9,6 @@ use Maatwebsite\LaravelNovaExcel\Requests\SerializedRequest;
 class QueuedExport extends ExportToExcel implements ShouldQueue
 {
     /**
-     * @var string
-     */
-    public function name()
-    {
-        return __('Export to Excel');
-    }
-
-    /**
      * Remove some attributes from this class when serializing,
      * so the action can be queued as exportable.
      * Serialize the request, so we keep information about
@@ -44,5 +36,13 @@ class QueuedExport extends ExportToExcel implements ShouldQueue
 
         // Reload Nova resources
         Nova::resourcesIn(app_path('Nova'));
+    }
+
+    /**
+     * @var string
+     */
+    public function name()
+    {
+        return __('Export to Excel');
     }
 }
