@@ -4,6 +4,7 @@ namespace Maatwebsite\LaravelNovaExcel\Actions;
 
 use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
+use Illuminate\Support\Arr;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\Gravatar;
@@ -197,11 +198,11 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
         }
 
         if (is_array($only) && count($only) > 0) {
-            $row = array_only($row, $only);
+            $row = Arr::only($row, $only);
         }
 
         if (is_array($except) && count($except) > 0) {
-            $row = array_except($row, $except);
+            $row = Arr::except($row, $except);
         }
 
         return $row;
