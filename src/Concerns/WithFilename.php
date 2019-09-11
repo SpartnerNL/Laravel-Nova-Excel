@@ -3,6 +3,7 @@
 namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
 use Laravel\Nova\Resource;
+use Illuminate\Support\Str;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Laravel\Nova\Http\Requests\LensActionRequest;
 
@@ -63,7 +64,7 @@ trait WithFilename
         $fields = $request->resolveFields();
 
         if ($filename = $fields->get('filename')) {
-            if (!str_contains($filename, '.')) {
+            if (!Str::contains($filename, '.')) {
                 $filename .= '.' . $this->getDefaultExtension();
             }
 
