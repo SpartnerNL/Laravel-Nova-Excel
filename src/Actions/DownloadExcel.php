@@ -18,6 +18,7 @@ class DownloadExcel extends ExportToExcel
     {
         return __('Download Excel');
     }
+
     /**
      * @param ActionRequest $request
      * @param Action        $exportable
