@@ -25,26 +25,28 @@
                 </div>
             </div>
 
-            <table class="table w-full">
-                <thead>
-                <tr>
-                    <th v-for="heading in headings">{{ heading }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td v-for="(heading, headingIndex) in headings" :key="headingIndex" class="text-center">
-                        <select class="w-full form-control form-select" v-model="mapping[headingIndex]">
-                            <option value="">- {{ __('Ignore this column') }} -</option>
-                            <option v-for="field in fields" :key="field.attribute" :value="field.attribute">{{ field.name }}</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr v-for="row in rows">
-                    <td v-for="(col, index) in row" :key="index">{{ col }}</td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="w-full overflow-x-scroll">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th v-for="heading in headings">{{ heading }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td v-for="(heading, headingIndex) in headings" :key="headingIndex" class="text-center" style="min-width:225px">
+                            <select class="w-full form-control form-select" v-model="mapping[headingIndex]">
+                                <option value="">- {{ __('Ignore this column') }} -</option>
+                                <option v-for="field in fields" :key="field.attribute" :value="field.attribute">{{ field.name }}</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr v-for="row in rows">
+                        <td v-for="(col, index) in row" :key="index">{{ col }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <div class="bg-30 flex px-8 py-4">
                 <button class="btn btn-link mr-4">{{ __('Cancel')}}</button>
