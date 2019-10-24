@@ -22,11 +22,13 @@ class UploadsPreviewsController extends Controller
     {
         $import = new PreviewImport($upload, $request);
 
-        $importer->import(
-            $import,
-            $upload->path,
-            $upload->disk
-        );
+        if (! $upload->stats) {
+            $importer->import(
+                $import,
+                $upload->path,
+                $upload->disk
+            );
+        }
 
         return $import;
     }

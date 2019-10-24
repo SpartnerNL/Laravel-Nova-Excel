@@ -38,6 +38,13 @@ class Upload extends Model
     ];
 
     /**
+     * @var array
+     */
+    protected $casts = [
+        'stats' => 'array',
+    ];
+
+    /**
      * @param UploadedFile $file
      * @param User         $user
      * @param null         $resource
