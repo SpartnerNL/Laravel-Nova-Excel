@@ -88,7 +88,7 @@ class PreviewImport implements ToCollection, WithLimit, WithEvents, Responsable
      */
     public function toResponse($request)
     {
-        if (! $this->upload->stats) {
+        if (!$this->upload->stats) {
             $this->upload->stats = [
                 'rows'      => $this->rows,
                 'headings'  => $this->headings,

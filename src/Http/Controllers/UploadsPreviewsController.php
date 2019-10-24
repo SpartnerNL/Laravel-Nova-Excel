@@ -22,7 +22,7 @@ class UploadsPreviewsController extends Controller
     {
         $import = new PreviewImport($upload, $request);
 
-        if (! $upload->stats) {
+        if (!$upload->stats) {
             $importer->import(
                 $import,
                 $upload->path,
