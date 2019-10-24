@@ -5,13 +5,15 @@
         <card class="flex flex-col">
             <div class="p-8">
                 <h2 class="pb-4">Preview</h2>
-                <p class="pb-4">
-                    We were able to discover <b>{{ columnCount }}</b> column(s) and <b>{{ rowCount }}</b>
-                    row(s) in your data.
-                </p>
-                <p class="pb-4">
-                    Match up the headings from the file to the appropriate fields of the resource.
-                </p>
+                <loading-view :loading="loading || importing">
+                    <p class="pb-4">
+                        We were able to discover <b>{{ columnCount }}</b> column(s) and <b>{{ rowCount }}</b>
+                        row(s) in your data.
+                    </p>
+                    <p class="pb-4">
+                        Match up the headings from the file to the appropriate fields of the resource.
+                    </p>
+                </loading-view>
 
                 <div v-if="errorMessage" class="bg-danger-light border border-danger-dark text-danger-dark px-4 py-3 rounded relative" role="alert">
                     <div class="font-bold mb-4">{{ errorMessage }}</div>
@@ -70,12 +72,14 @@
                 importing: false,
                 errors: [],
                 errorMessage: null,
+                loading: true,
             }
         },
         async mounted() {
             let {data: {rows, headings, totalRows, fields}} = await window.Nova.request()
                 .get(`/nova-vendor/maatwebsite/laravel-nova-excel/uploads/${this.upload}/preview`);
 
+            this.loading = false;
             this.rows = rows;
             this.fields = fields;
             this.headings = headings;
