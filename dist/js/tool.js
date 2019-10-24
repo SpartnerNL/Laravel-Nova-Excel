@@ -394,6 +394,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['upload'],
   data: function data() {
@@ -406,7 +410,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       mapping: {},
       importing: false,
       errors: [],
-      errorMessage: null
+      errorMessage: null,
+      loading: true
     };
   },
   mounted: function () {
@@ -431,6 +436,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               headings = _ref$data.headings;
               totalRows = _ref$data.totalRows;
               fields = _ref$data.fields;
+              this.loading = false;
               this.rows = rows;
               this.fields = fields;
               this.headings = headings;
@@ -439,8 +445,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               this.headings.map(function (value, key) {
                 _this.mapping[key] = '';
               });
+              this.fields.forEach(function (field_config) {
+                var field = field_config.attribute,
+                    heading_index = _this.headings.indexOf(field);
 
-            case 14:
+                if (heading_index < 0) {
+                  return;
+                }
+
+                var heading = _this.headings[heading_index];
+
+                if (heading === field) {
+                  _this.$set(_this.mapping, heading_index, field);
+                }
+              });
+
+            case 16:
             case "end":
               return _context.stop();
           }
@@ -11714,154 +11734,175 @@ var render = function() {
       _c("heading", { staticClass: "mb-6" }, [_vm._v("Import")]),
       _vm._v(" "),
       _c("card", { staticClass: "flex flex-col" }, [
-        _c("div", { staticClass: "p-8" }, [
-          _c("h2", { staticClass: "pb-4" }, [_vm._v("Preview")]),
-          _vm._v(" "),
-          _c("p", { staticClass: "pb-4" }, [
-            _vm._v("\n                We were able to discover "),
-            _c("b", [_vm._v(_vm._s(_vm.columnCount))]),
-            _vm._v(" column(s) and "),
-            _c("b", [_vm._v(_vm._s(_vm.rowCount))]),
-            _vm._v("\n                row(s) in your data.\n            ")
-          ]),
-          _vm._v(" "),
-          _c("p", { staticClass: "pb-4" }, [
-            _vm._v(
-              "\n                Match up the headings from the file to the appropriate fields of the resource.\n            "
-            )
-          ]),
-          _vm._v(" "),
-          _vm.errorMessage
-            ? _c(
-                "div",
-                {
-                  staticClass:
-                    "bg-danger-light border border-danger-dark text-danger-dark px-4 py-3 rounded relative",
-                  attrs: { role: "alert" }
-                },
-                [
-                  _c("div", { staticClass: "font-bold mb-4" }, [
-                    _vm._v(_vm._s(_vm.errorMessage))
-                  ]),
-                  _vm._v(" "),
-                  _vm.errors.length > 0
-                    ? _c(
-                        "ul",
-                        { staticClass: "pl-6" },
-                        _vm._l(_vm.errors, function(error) {
-                          return _c("li", { key: error.row }, [
-                            _vm._v(
-                              "\n                        " +
-                                _vm._s(
-                                  _vm.__("Error on row :row.", {
-                                    row: error.row
-                                  })
-                                ) +
-                                " " +
-                                _vm._s(error.message) +
-                                "\n                    "
-                            )
-                          ])
-                        }),
-                        0
-                      )
-                    : _vm._e()
-                ]
-              )
-            : _vm._e()
-        ]),
-        _vm._v(" "),
-        _c("table", { staticClass: "table w-full" }, [
-          _c("thead", [
+        _c(
+          "div",
+          { staticClass: "p-8" },
+          [
+            _c("h2", { staticClass: "pb-4" }, [_vm._v("Preview")]),
+            _vm._v(" "),
             _c(
-              "tr",
-              _vm._l(_vm.headings, function(heading) {
-                return _c("th", [_vm._v(_vm._s(heading))])
-              }),
-              0
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "tbody",
-            [
+              "loading-view",
+              { attrs: { loading: _vm.loading || _vm.importing } },
+              [
+                _c("p", { staticClass: "pb-4" }, [
+                  _vm._v("\n                    We were able to discover "),
+                  _c("b", [_vm._v(_vm._s(_vm.columnCount))]),
+                  _vm._v(" column(s) and "),
+                  _c("b", [_vm._v(_vm._s(_vm.rowCount))]),
+                  _vm._v(
+                    "\n                    row(s) in your data.\n                "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "pb-4" }, [
+                  _vm._v(
+                    "\n                    Match up the headings from the file to the appropriate fields of the resource.\n                "
+                  )
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _vm.errorMessage
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "bg-danger-light border border-danger-dark text-danger-dark px-4 py-3 rounded relative",
+                    attrs: { role: "alert" }
+                  },
+                  [
+                    _c("div", { staticClass: "font-bold mb-4" }, [
+                      _vm._v(_vm._s(_vm.errorMessage))
+                    ]),
+                    _vm._v(" "),
+                    _vm.errors.length > 0
+                      ? _c(
+                          "ul",
+                          { staticClass: "pl-6" },
+                          _vm._l(_vm.errors, function(error) {
+                            return _c("li", { key: error.row }, [
+                              _vm._v(
+                                "\n                        " +
+                                  _vm._s(
+                                    _vm.__("Error on row :row.", {
+                                      row: error.row
+                                    })
+                                  ) +
+                                  " " +
+                                  _vm._s(error.message) +
+                                  "\n                    "
+                              )
+                            ])
+                          }),
+                          0
+                        )
+                      : _vm._e()
+                  ]
+                )
+              : _vm._e()
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "w-full overflow-x-scroll" }, [
+          _c("table", { staticClass: "table" }, [
+            _c("thead", [
               _c(
                 "tr",
-                _vm._l(_vm.headings, function(heading, headingIndex) {
-                  return _c(
-                    "td",
-                    { key: headingIndex, staticClass: "text-center" },
-                    [
-                      _c(
-                        "select",
-                        {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.mapping[headingIndex],
-                              expression: "mapping[headingIndex]"
-                            }
-                          ],
-                          staticClass: "w-full form-control form-select",
-                          on: {
-                            change: function($event) {
-                              var $$selectedVal = Array.prototype.filter
-                                .call($event.target.options, function(o) {
-                                  return o.selected
-                                })
-                                .map(function(o) {
-                                  var val = "_value" in o ? o._value : o.value
-                                  return val
-                                })
-                              _vm.$set(
-                                _vm.mapping,
-                                headingIndex,
-                                $event.target.multiple
-                                  ? $$selectedVal
-                                  : $$selectedVal[0]
-                              )
-                            }
-                          }
-                        },
-                        [
-                          _c("option", { attrs: { value: "" } }, [
-                            _vm._v(
-                              "- " + _vm._s(_vm.__("Ignore this column")) + " -"
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _vm._l(_vm.fields, function(field) {
-                            return _c(
-                              "option",
-                              {
-                                key: field.attribute,
-                                domProps: { value: field.attribute }
-                              },
-                              [_vm._v(_vm._s(field.name))]
-                            )
-                          })
-                        ],
-                        2
-                      )
-                    ]
-                  )
+                _vm._l(_vm.headings, function(heading) {
+                  return _c("th", [_vm._v(_vm._s(heading))])
                 }),
                 0
-              ),
-              _vm._v(" "),
-              _vm._l(_vm.rows, function(row) {
-                return _c(
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              [
+                _c(
                   "tr",
-                  _vm._l(row, function(col, index) {
-                    return _c("td", { key: index }, [_vm._v(_vm._s(col))])
+                  _vm._l(_vm.headings, function(heading, headingIndex) {
+                    return _c(
+                      "td",
+                      {
+                        key: headingIndex,
+                        staticClass: "text-center",
+                        staticStyle: { "min-width": "225px" }
+                      },
+                      [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.mapping[headingIndex],
+                                expression: "mapping[headingIndex]"
+                              }
+                            ],
+                            staticClass: "w-full form-control form-select",
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.mapping,
+                                  headingIndex,
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _c("option", { attrs: { value: "" } }, [
+                              _vm._v(
+                                "- " +
+                                  _vm._s(_vm.__("Ignore this column")) +
+                                  " -"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _vm._l(_vm.fields, function(field) {
+                              return _c(
+                                "option",
+                                {
+                                  key: field.attribute,
+                                  domProps: { value: field.attribute }
+                                },
+                                [_vm._v(_vm._s(field.name))]
+                              )
+                            })
+                          ],
+                          2
+                        )
+                      ]
+                    )
                   }),
                   0
-                )
-              })
-            ],
-            2
-          )
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.rows, function(row) {
+                  return _c(
+                    "tr",
+                    _vm._l(row, function(col, index) {
+                      return _c("td", { key: index }, [_vm._v(_vm._s(col))])
+                    }),
+                    0
+                  )
+                })
+              ],
+              2
+            )
+          ])
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "bg-30 flex px-8 py-4" }, [
@@ -12389,7 +12430,7 @@ Nova.booting(function (Vue, router) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /Users/patrick/Sites/laravel-nova/maatwebsite/laravel-nova-excel/resources/js/tool.js */"./resources/js/tool.js");
+module.exports = __webpack_require__(/*! /Users/simonhamp/Projects/Composer/Laravel-Nova-Excel/resources/js/tool.js */"./resources/js/tool.js");
 
 
 /***/ })

@@ -90,7 +90,22 @@
 
             this.headings.map((value, key) => {
                 this.mapping[key] = '';
-            })
+            });
+
+            this.fields.forEach((field_config) => {
+                let field = field_config.attribute,
+                    heading_index = this.headings.indexOf(field);
+
+                if (heading_index < 0) {
+                    return;
+                }
+
+                let heading = this.headings[heading_index];
+
+                if (heading === field) {
+                    this.$set(this.mapping, heading_index, field);
+                }
+            });
         },
         methods: {
             async importRows() {
