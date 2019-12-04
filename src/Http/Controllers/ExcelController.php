@@ -20,6 +20,10 @@ class ExcelController extends Controller
      */
     public function download(Request $request, ResponseFactory $response): BinaryFileResponse
     {
+        if(!$this->canAccess($request['path'])) {
+            abort(404);
+        }
+
         $data = $this->validate($request, [
             'path'     => 'required',
             'filename' => 'required',
@@ -29,5 +33,23 @@ class ExcelController extends Controller
             $data['path'],
             $data['filename']
         )->deleteFileAfterSend($shouldDelete = true);
+    }
+
+    /**
+     * Check if file is valid to download
+     *
+     * @param string $path
+     * @return boolean
+     */
+    protected function canAccess(string $path):bool
+    {
+        $isValid = true;
+        $validFileExtensions = ['csv', 'xlsx'];
+
+        $path_info = pathinfo($path);
+        if(!in_array($path_info['extension'], $validFileExtensions)) {
+            $isValid = false;
+        }
+        return $isValid;
     }
 }
