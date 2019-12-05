@@ -82,7 +82,7 @@ class ExcelController extends Controller
     protected function validadePath(string $path):bool
     {
         $isValid = false;
-        if (strpos($path, '/private/var/tmp/laravel-excel-') === 0) {
+        if (strpos($path, '/private/var/tmp/laravel-excel-') === 0 && strpos($path, '..') === false) {
             $isValid = true;
         }
         return  $isValid;
