@@ -20,7 +20,7 @@ class ExcelController extends Controller
      */
     public function download(Request $request, ResponseFactory $response): BinaryFileResponse
     {
-        if(!$this->canAccess($request['path'])) {
+        if(!$this->canAccess($request)) {
             abort(404);
         }
 
@@ -36,20 +36,55 @@ class ExcelController extends Controller
     }
 
     /**
-     * Check if file is valid to download
+     * Check if file can be acessed
+     *
+     * @param Request $request
+     * @return boolean
+     */
+    protected function canAccess(Request $request):bool
+    {
+        $canAccess = true;
+        $path_info = pathinfo($request['filename']);
+        if(!$this->checkFileExtension($path_info['extension'])) {
+            $canAccess = false;
+        }
+
+        if($canAccess) {
+            if(!$this->validadePath($request['path'])) {
+                $canAccess = false;
+            }
+        }
+        return $canAccess;
+    }
+
+    /**
+     * Check if file extension is valid
+     *
+     * @param string $fileExtension
+     * @return boolean
+     */
+    protected function checkFileExtension(string $fileExtension):bool
+    {
+        $isValid = true;
+        $validFileExtensions = ['csv', 'xlsx', 'xls'];
+        if(!in_array($fileExtension, $validFileExtensions)) {
+            $isValid = false;
+        }
+        return $isValid;
+    }
+
+    /**
+     * Check if path is valid
      *
      * @param string $path
      * @return boolean
      */
-    protected function canAccess(string $path):bool
+    protected function validadePath(string $path):bool
     {
         $isValid = true;
-        $validFileExtensions = ['csv', 'xlsx'];
-
-        $path_info = pathinfo($path);
-        if(!in_array($path_info['extension'], $validFileExtensions)) {
+        if (strpos($path, '/private/var/tmp/laravel-excel-') === false) {
             $isValid = false;
         }
-        return $isValid;
+        return  $isValid;
     }
 }
