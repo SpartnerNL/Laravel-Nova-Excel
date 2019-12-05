@@ -44,13 +44,13 @@ class ExcelController extends Controller
     protected function canAccess(Request $request):bool
     {
         $canAccess = true;
-        $path_info = pathinfo($request['filename']);
-        if(!$this->checkFileExtension($path_info['extension'])) {
+        $pathInfo = pathinfo($request->input('filename'));
+        if(!$this->checkFileExtension($pathInfo['extension'])) {
             $canAccess = false;
         }
 
         if($canAccess) {
-            if(!$this->validadePath($request['path'])) {
+            if(!$this->validadePath($request->input('path'))) {
                 $canAccess = false;
             }
         }
@@ -81,9 +81,9 @@ class ExcelController extends Controller
      */
     protected function validadePath(string $path):bool
     {
-        $isValid = true;
-        if (strpos($path, '/private/var/tmp/laravel-excel-') === false) {
-            $isValid = false;
+        $isValid = false;
+        if (strpos($path, '/private/var/tmp/laravel-excel-') === 0) {
+            $isValid = true;
         }
         return  $isValid;
     }
