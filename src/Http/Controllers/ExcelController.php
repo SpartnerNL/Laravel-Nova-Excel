@@ -29,10 +29,15 @@ class ExcelController extends Controller
             'filename' => 'required',
         ]);
 
-        return $response->download(
-            $data['path'],
-            $data['filename']
-        )->deleteFileAfterSend($shouldDelete = true);
+        try{
+            $download = $response->download(
+                $data['path'],
+                $data['filename']
+            )->deleteFileAfterSend($shouldDelete = true);
+        }catch (\Exception $exception) {
+            abort(403);
+        }
+        return $download;
     }
 
     /**
@@ -45,12 +50,12 @@ class ExcelController extends Controller
     {
         $canAccess = true;
         $pathInfo = pathinfo($request->input('filename'));
-        if(!$this->checkFileExtension($pathInfo['extension'])) {
+
+        if(!$this->validadePath($request->input('path'))) {
             $canAccess = false;
         }
-
         if($canAccess) {
-            if(!$this->validadePath($request->input('path'))) {
+            if(!$this->checkFileExtension($pathInfo['extension'])) {
                 $canAccess = false;
             }
         }
@@ -82,7 +87,9 @@ class ExcelController extends Controller
     protected function validadePath(string $path):bool
     {
         $isValid = false;
-        if (strpos($path, '/private/var/tmp/laravel-excel-') === 0 && strpos($path, '..') === false) {
+        $strRealPath = realpath($path);
+
+        if (strpos($strRealPath, base_path().'/storage') === 0) {
             $isValid = true;
         }
         return  $isValid;
