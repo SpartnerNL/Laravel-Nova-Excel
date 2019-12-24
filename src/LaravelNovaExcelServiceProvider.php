@@ -4,6 +4,7 @@ namespace Maatwebsite\LaravelNovaExcel;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Maatwebsite\LaravelNovaExcel\Http\Middleware\Authorize;
 
 class LaravelNovaExcelServiceProvider extends ServiceProvider
 {

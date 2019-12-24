@@ -2,6 +2,7 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
+use Illuminate\Support\Facades\URL;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Maatwebsite\Excel\Facades\Excel;
@@ -54,9 +55,9 @@ class DownloadExcel extends ExportToExcel
      */
     protected function getDownloadUrl(BinaryFileResponse $response): string
     {
-        return url('/nova-vendor/maatwebsite/laravel-nova-excel/download?') . http_build_query([
-                'path'     => $response->getFile()->getPathname(),
-                'filename' => $this->getFilename(),
-            ]);
+        return URL::temporarySignedRoute('laravel-nova-excel.download', now()->addMinutes(1), [
+            'path'     => encrypt($response->getFile()->getPathname()),
+            'filename' => $this->getFilename(),
+        ]);
     }
 }
