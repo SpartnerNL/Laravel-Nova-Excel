@@ -2,10 +2,10 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ExcelController extends Controller

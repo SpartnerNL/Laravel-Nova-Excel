@@ -2,31 +2,31 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Fields\Field;
+use Laravel\Nova\Fields\Gravatar;
+use Laravel\Nova\Http\Requests\ActionRequest;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
-use Illuminate\Support\Arr;
-use Laravel\Nova\Fields\Field;
-use Laravel\Nova\Actions\Action;
-use Laravel\Nova\Fields\Gravatar;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Maatwebsite\Excel\Concerns\FromQuery;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Laravel\Nova\Http\Requests\ActionRequest;
-use Maatwebsite\LaravelNovaExcel\Concerns\Only;
-use Maatwebsite\LaravelNovaExcel\Concerns\Except;
 use Maatwebsite\Excel\Concerns\WithCustomChunkSize;
+use Maatwebsite\Excel\Concerns\WithHeadings as WithHeadingsConcern;
+use Maatwebsite\Excel\Concerns\WithMapping;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\LaravelNovaExcel\Concerns\Except;
+use Maatwebsite\LaravelNovaExcel\Concerns\Only;
+use Maatwebsite\LaravelNovaExcel\Concerns\WithChunkCount;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithDisk;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithFilename;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithHeadings;
-use Maatwebsite\LaravelNovaExcel\Concerns\WithChunkCount;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithWriterType;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForFilename;
-use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 use Maatwebsite\LaravelNovaExcel\Interactions\AskForWriterType;
-use Maatwebsite\Excel\Concerns\WithHeadings as WithHeadingsConcern;
+use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequestFactory;
 
 class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, WithHeadingsConcern, WithMapping

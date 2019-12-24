@@ -2,9 +2,9 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Requests;
 
-use Laravel\Nova\Resource;
-use Laravel\Nova\Fields\Field;
 use Illuminate\Support\Collection;
+use Laravel\Nova\Fields\Field;
+use Laravel\Nova\Resource;
 
 interface ExportActionRequest
 {
