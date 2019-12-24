@@ -262,6 +262,9 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
             }
         }
 
+        // Fix sorting
+        $row = array_merge(array_flip($only), $row);
+
         return $row;
     }
 
