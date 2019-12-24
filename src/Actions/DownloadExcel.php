@@ -10,6 +10,16 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class DownloadExcel extends ExportToExcel
 {
     /**
+     * Get the displayable name of the action.
+     *
+     * @return string
+     */
+    public function name()
+    {
+        return __('Download Excel');
+    }
+
+    /**
      * @param ActionRequest $request
      * @param Action        $exportable
      *
