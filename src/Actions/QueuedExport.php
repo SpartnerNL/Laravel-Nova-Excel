@@ -6,6 +6,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Laravel\Nova\Nova;
 use Maatwebsite\LaravelNovaExcel\Requests\SerializedRequest;
 
+/**
+ * @deprecated It's currently impossible to queue an export based on dynamic filters due to serialization issues of the query.
+ */
 class QueuedExport extends ExportToExcel implements ShouldQueue
 {
     /**
@@ -39,7 +42,7 @@ class QueuedExport extends ExportToExcel implements ShouldQueue
     }
 
     /**
-     * @var string
+     * @return string
      */
     public function name()
     {
