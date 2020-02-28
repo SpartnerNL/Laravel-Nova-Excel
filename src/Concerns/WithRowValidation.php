@@ -2,8 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
-use Throwable;
 use Laravel\Nova\Resource;
+use Throwable;
 
 trait WithRowValidation
 {

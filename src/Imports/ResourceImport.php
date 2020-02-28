@@ -2,19 +2,19 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Imports;
 
-use Laravel\Nova\Resource;
 use Illuminate\Database\Eloquent\Model;
-use Maatwebsite\Excel\Concerns\ToModel;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Maatwebsite\Excel\Concerns\WithStartRow;
-use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\LaravelNovaExcel\Models\Import;
+use Laravel\Nova\Resource;
+use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithStartRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\LaravelNovaExcel\Concerns\BelongsToAction;
-use Maatwebsite\LaravelNovaExcel\Concerns\WithRowValidation;
 use Maatwebsite\LaravelNovaExcel\Concerns\KeepsTrackOfImport;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithColumnMappings;
+use Maatwebsite\LaravelNovaExcel\Concerns\WithRowValidation;
+use Maatwebsite\LaravelNovaExcel\Models\Import;
 
 class ResourceImport implements ToModel, WithStartRow, WithBatchInserts, WithChunkReading, WithValidation
 {

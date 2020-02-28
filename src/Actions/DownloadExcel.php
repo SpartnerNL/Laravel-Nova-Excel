@@ -3,8 +3,8 @@
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
 use Laravel\Nova\Actions\Action;
-use Maatwebsite\Excel\Facades\Excel;
 use Laravel\Nova\Http\Requests\ActionRequest;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DownloadExcel extends ExportToExcel
@@ -45,8 +45,8 @@ class DownloadExcel extends ExportToExcel
     protected function getDownloadUrl(BinaryFileResponse $response): string
     {
         return url('/nova-vendor/maatwebsite/laravel-nova-excel/download?') . http_build_query([
-                'path'     => $response->getFile()->getPathname(),
-                'filename' => $this->getFilename(),
-            ]);
+            'path'     => $response->getFile()->getPathname(),
+            'filename' => $this->getFilename(),
+        ]);
     }
 }

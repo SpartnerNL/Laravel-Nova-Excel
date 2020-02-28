@@ -2,8 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Interactions;
 
-use Maatwebsite\Excel\Excel;
 use Laravel\Nova\Fields\Select;
+use Maatwebsite\Excel\Excel;
 
 trait AskForWriterType
 {

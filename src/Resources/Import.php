@@ -2,16 +2,16 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Resources;
 
+use Illuminate\Http\Request;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\Status;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Http\Requests\ActionRequest;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Status;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\BelongsTo;
-use Laravel\Nova\Http\Requests\ActionRequest;
-use Maatwebsite\LaravelNovaExcel\Fields\RetryButton;
 use Maatwebsite\LaravelNovaExcel\Actions\RevertImport;
+use Maatwebsite\LaravelNovaExcel\Fields\RetryButton;
 use Maatwebsite\LaravelNovaExcel\Models\Import as ImportModel;
 
 class Import extends Resource

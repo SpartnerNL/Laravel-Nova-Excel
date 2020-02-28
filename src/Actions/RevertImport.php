@@ -2,11 +2,11 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
-use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Facades\DB;
-use Laravel\Nova\Fields\ActionFields;
-use Laravel\Nova\Actions\DestructiveAction;
+use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Actions\ActionModelCollection;
+use Laravel\Nova\Actions\DestructiveAction;
+use Laravel\Nova\Fields\ActionFields;
 
 class RevertImport extends DestructiveAction
 {

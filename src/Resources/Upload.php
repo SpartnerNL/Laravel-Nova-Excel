@@ -2,8 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Resources;
 
-use Laravel\Nova\Resource;
 use Illuminate\Http\Request;
+use Laravel\Nova\Resource;
 use Maatwebsite\LaravelNovaExcel\Models\Upload as UploadModel;
 
 class Upload extends Resource

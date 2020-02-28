@@ -2,19 +2,19 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
-use Laravel\Nova\Resource;
-use Maatwebsite\Excel\Importer;
-use Laravel\Nova\Actions\Action;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Validators\Failure;
+use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Maatwebsite\LaravelNovaExcel\Models\Import;
-use Maatwebsite\LaravelNovaExcel\Models\Upload;
+use Laravel\Nova\Resource;
+use Maatwebsite\Excel\Importer;
+use Maatwebsite\Excel\Validators\Failure;
 use Maatwebsite\Excel\Validators\ValidationException;
 use Maatwebsite\LaravelNovaExcel\Actions\ImportExcel;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use Maatwebsite\LaravelNovaExcel\Models\Import;
+use Maatwebsite\LaravelNovaExcel\Models\Upload;
 
 class UploadsImportsController extends Controller
 {

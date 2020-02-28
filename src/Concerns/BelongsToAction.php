@@ -2,8 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
-use Laravel\Nova\Resource;
 use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Resource;
 use Maatwebsite\LaravelNovaExcel\Actions\ImportExcel;
 
 trait BelongsToAction

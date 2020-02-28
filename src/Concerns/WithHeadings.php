@@ -2,9 +2,9 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Concerns;
 
-use Illuminate\Support\Collection;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 
 trait WithHeadings

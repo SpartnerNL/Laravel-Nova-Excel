@@ -2,8 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel;
 
-use Maatwebsite\LaravelNovaExcel\Models\Import;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Maatwebsite\LaravelNovaExcel\Models\Import;
 
 trait BelongsToImport
 {

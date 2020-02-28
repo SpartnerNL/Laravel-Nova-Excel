@@ -2,11 +2,11 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
-use Laravel\Nova\Fields\File;
 use Laravel\Nova\Actions\Action;
+use Laravel\Nova\Fields\File;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Maatwebsite\LaravelNovaExcel\Models\Import;
 use Maatwebsite\LaravelNovaExcel\Imports\ResourceImport;
+use Maatwebsite\LaravelNovaExcel\Models\Import;
 
 class ImportExcel extends Action
 {

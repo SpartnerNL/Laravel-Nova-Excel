@@ -2,8 +2,8 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
-use Laravel\Nova\Nova;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Laravel\Nova\Nova;
 use Maatwebsite\LaravelNovaExcel\Requests\SerializedRequest;
 
 class QueuedExport extends ExportToExcel implements ShouldQueue

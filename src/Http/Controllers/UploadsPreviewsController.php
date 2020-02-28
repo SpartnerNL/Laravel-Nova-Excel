@@ -2,12 +2,12 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
-use Maatwebsite\Excel\Importer;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Routing\Controller;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Illuminate\Contracts\Support\Responsable;
-use Maatwebsite\LaravelNovaExcel\Models\Upload;
+use Maatwebsite\Excel\Importer;
 use Maatwebsite\LaravelNovaExcel\Imports\PreviewImport;
+use Maatwebsite\LaravelNovaExcel\Models\Upload;
 
 class UploadsPreviewsController extends Controller
 {

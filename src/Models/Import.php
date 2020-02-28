@@ -2,9 +2,9 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Models;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @property array  mapping

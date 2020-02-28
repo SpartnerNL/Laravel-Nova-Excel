@@ -2,9 +2,9 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Requests;
 
-use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Laravel\Nova\Http\Requests\LensActionRequest;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class SerializedRequest
 {
