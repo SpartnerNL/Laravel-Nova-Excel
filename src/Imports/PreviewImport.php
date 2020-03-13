@@ -88,12 +88,18 @@ class PreviewImport implements ToCollection, WithLimit, WithEvents, Responsable
      */
     public function toResponse($request)
     {
-        return new JsonResponse([
-            'rows'      => $this->rows,
-            'headings'  => $this->headings,
-            'totalRows' => $this->totalRows,
-            'fields'    => $this->resource()->creationFields($this->request),
-        ]);
+        if (!$this->upload->stats) {
+            $this->upload->stats = [
+                'rows'      => $this->rows,
+                'headings'  => $this->headings,
+                'totalRows' => $this->totalRows,
+                'fields'    => $this->resource()->creationFields($this->request),
+            ];
+
+            $this->upload->update();
+        }
+
+        return new JsonResponse($this->upload->stats);
     }
 
     /**

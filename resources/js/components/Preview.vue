@@ -5,13 +5,15 @@
         <card class="flex flex-col">
             <div class="p-8">
                 <h2 class="pb-4">Preview</h2>
-                <p class="pb-4">
-                    We were able to discover <b>{{ columnCount }}</b> column(s) and <b>{{ rowCount }}</b>
-                    row(s) in your data.
-                </p>
-                <p class="pb-4">
-                    Match up the headings from the file to the appropriate fields of the resource.
-                </p>
+                <loading-view :loading="loading || importing">
+                    <p class="pb-4">
+                        We were able to discover <b>{{ columnCount }}</b> column(s) and <b>{{ rowCount }}</b>
+                        row(s) in your data.
+                    </p>
+                    <p class="pb-4">
+                        Match up the headings from the file to the appropriate fields of the resource.
+                    </p>
+                </loading-view>
 
                 <div v-if="errorMessage" class="bg-danger-light border border-danger-dark text-danger-dark px-4 py-3 rounded relative" role="alert">
                     <div class="font-bold mb-4">{{ errorMessage }}</div>
@@ -23,26 +25,28 @@
                 </div>
             </div>
 
-            <table class="table w-full">
-                <thead>
-                <tr>
-                    <th v-for="heading in headings">{{ heading }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td v-for="(heading, headingIndex) in headings" :key="headingIndex" class="text-center">
-                        <select class="w-full form-control form-select" v-model="mapping[headingIndex]">
-                            <option value="">- {{ __('Ignore this column') }} -</option>
-                            <option v-for="field in fields" :key="field.attribute" :value="field.attribute">{{ field.name }}</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr v-for="row in rows">
-                    <td v-for="(col, index) in row" :key="index">{{ col }}</td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="w-full overflow-x-scroll">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th v-for="heading in headings">{{ heading }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td v-for="(heading, headingIndex) in headings" :key="headingIndex" class="text-center" style="min-width:225px">
+                            <select class="w-full form-control form-select" v-model="mapping[headingIndex]">
+                                <option value="">- {{ __('Ignore this column') }} -</option>
+                                <option v-for="field in fields" :key="field.attribute" :value="field.attribute">{{ field.name }}</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr v-for="row in rows">
+                        <td v-for="(col, index) in row" :key="index">{{ col }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <div class="bg-30 flex px-8 py-4">
                 <button class="btn btn-link mr-4">{{ __('Cancel')}}</button>
@@ -70,12 +74,14 @@
                 importing: false,
                 errors: [],
                 errorMessage: null,
+                loading: true,
             }
         },
         async mounted() {
             let {data: {rows, headings, totalRows, fields}} = await window.Nova.request()
                 .get(`/nova-vendor/maatwebsite/laravel-nova-excel/uploads/${this.upload}/preview`);
 
+            this.loading = false;
             this.rows = rows;
             this.fields = fields;
             this.headings = headings;
@@ -84,7 +90,22 @@
 
             this.headings.map((value, key) => {
                 this.mapping[key] = '';
-            })
+            });
+
+            this.fields.forEach((field_config) => {
+                let field = field_config.attribute,
+                    heading_index = this.headings.indexOf(field);
+
+                if (heading_index < 0) {
+                    return;
+                }
+
+                let heading = this.headings[heading_index];
+
+                if (heading === field) {
+                    this.$set(this.mapping, heading_index, field);
+                }
+            });
         },
         methods: {
             async importRows() {

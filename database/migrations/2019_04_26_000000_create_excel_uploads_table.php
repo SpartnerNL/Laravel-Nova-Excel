@@ -19,6 +19,7 @@ class CreateExcelUploadsTable extends Migration
             $table->string('resource');
             $table->string('disk')->nullable();
             $table->string('path')->nullable();
+            $table->string('stats')->nullable();
             $table->string('filename');
             $table->timestamps();
         });
