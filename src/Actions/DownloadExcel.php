@@ -17,7 +17,7 @@ class DownloadExcel extends ExportToExcel
      */
     public function name()
     {
-        return __('Download Excel');
+        return $this->name ?? __('Download Excel');
     }
 
     /**
