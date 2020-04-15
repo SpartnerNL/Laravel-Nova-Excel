@@ -7,7 +7,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Validation\ValidationException;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Nova;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
+use ReflectionClass;
 
 class UploadsController extends Controller
 {
@@ -26,12 +28,30 @@ class UploadsController extends Controller
             'file' => 'required|file',
         ]);
 
+        $actualResource = $this->getResourceName($resource);
+
         $upload = Upload::forUploadedFile(
             $validated['file'],
             $request->user(),
-            $resource
+            $actualResource !== $resource ? $actualResource : $resource,
+            $actualResource !== $resource ? $resource : null
         );
 
-        return response()->json(['result' => 'success', 'upload' => $upload->getKey()]);
+        return response()->json(['result' => 'success', 'upload' => $upload->getKey(), 'meta' => $request->except(array_keys($validated))]);
+    }
+
+    private function getResourceName($resource)
+    {
+        try {
+            $model        = Nova::modelInstanceForKey($resource);
+            $resourceName = Nova::resourceForModel($model);
+
+            if (class_exists($resourceName) && property_exists($resourceName, 'import_as')) {
+                return ($resourceName::$import_as)::uriKey();
+            } else return $resource;
+
+        } catch (\Exception $e) {
+            return $resource;
+        }
     }
 }

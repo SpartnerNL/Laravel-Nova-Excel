@@ -5,6 +5,7 @@ namespace Maatwebsite\LaravelNovaExcel\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
+use Laravel\Nova\Nova;
 
 /**
  * @property array  mapping
@@ -45,6 +46,7 @@ class Import extends Model
     protected $fillable = [
         'user_id',
         'resource',
+        'parent_resource',
         'mapping',
         'status',
     ];
@@ -68,6 +70,7 @@ class Import extends Model
             $import = new static([
                 'mapping'  => $mapping,
                 'resource' => $upload->resource,
+                'parent_resource' => $upload->parent_resource,
                 'status'   => Import::STATUS_PENDING,
             ]);
 
@@ -97,5 +100,15 @@ class Import extends Model
     public function upload()
     {
         return $this->belongsTo(Upload::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function models()
+    {
+        $model = Nova::modelInstanceForKey($this->resource);
+
+        return $this->hasMany(get_class($model));
     }
 }

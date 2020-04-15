@@ -34,6 +34,7 @@ class Upload extends Model
         'disk',
         'filename',
         'resource',
+        'parent_resource',
         'path',
     ];
 
@@ -44,13 +45,14 @@ class Upload extends Model
      *
      * @return static
      */
-    public static function forUploadedFile(UploadedFile $file, $user, $resource = null)
+    public static function forUploadedFile(UploadedFile $file, $user, $resource = null, $parentResource = null)
     {
-        return DB::transaction(function () use ($resource, $file, $user) {
+        return DB::transaction(function () use ($resource, $file, $user, $parentResource) {
             $upload = new static([
                 'disk'     => null,
                 'resource' => $resource,
-                'filename' => $file->getClientOriginalName(),
+                'parent_resource' => $parentResource,
+                'filename' => $file->getClientOriginalName()
             ]);
 
             $upload->user()->associate($user);

@@ -57,7 +57,8 @@
 <script>
     export default {
         props: [
-            'upload'
+            'upload',
+            'meta'
         ],
         data() {
             return {
@@ -95,6 +96,7 @@
                 try {
                     await window.Nova.request().post(`/nova-vendor/maatwebsite/laravel-nova-excel/uploads/${this.upload}/import`, {
                         mapping: this.mapping,
+                        meta: this.meta
                     });
 
                     this.$toasted.show('All data imported!', {type: "success"});

@@ -17,11 +17,7 @@ Nova.booting((Vue, router) => {
             name: 'excel-imports-preview',
             path: '/imports/:upload/preview',
             component: Preview,
-            props: route => {
-                return {
-                    upload: route.params.upload,
-                }
-            },
+            props: true
         },
     ])
 });

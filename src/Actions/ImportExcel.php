@@ -31,6 +31,16 @@ class ImportExcel extends Action
     protected $map;
 
     /**
+     * @var array
+     */
+    protected $additionalFields = [];
+
+    /**
+     * @var callable
+     */
+    public $afterCallback;
+
+    /**
      * @param string|null $name
      */
     public function __construct(string $name = null)
@@ -150,12 +160,38 @@ class ImportExcel extends Action
     }
 
     /**
+     * @param \Laravel\Nova\Fields\Field $field
+     *
+     * @return void
+     */
+    public function addField(\Laravel\Nova\Fields\Field $field)
+    {
+        array_push($this->additionalFields, $field);
+        return $this;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return void
+     */
+    public function after(callable $callback)
+    {
+        $this->afterCallback = $callback;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function fields()
     {
-        return [
-            File::make(__('File')),
-        ];
+        return array_merge(
+            [
+                File::make(__('File')),
+            ],
+            $this->additionalFields
+        );
     }
 }

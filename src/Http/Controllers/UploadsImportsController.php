@@ -44,11 +44,20 @@ class UploadsImportsController extends Controller
         ]);
 
         try {
+            $action = $this->action($import->getResourceInstance(), $request);
+
             $importer->import(
-                $this->action($import->getResourceInstance(), $request)->getImportObject($import, $request),
+                $action->getImportObject($import, $request),
                 $import->upload->path,
                 $import->upload->disk
             );
+
+            if (is_callable($action->afterCallback)) {
+                ($action->afterCallback)(
+                    $import->models,
+                    (object)($request->input('meta', []))
+                );
+            }
 
             $import->update([
                 'status' => Import::STATUS_COMPLETED,

@@ -68,7 +68,7 @@
                         headers: {'Content-Type': 'multipart/form-data'}
                     });
 
-                    this.$router.push({name: 'excel-imports-preview', params: {upload: data.upload}});
+                    this.$router.push({name: 'excel-imports-preview', params: {upload: data.upload, meta: data.meta}});
                 } catch (error) {
                     if (error.response.status === 422) {
                         this.errors = new Errors(error.response.data.errors)
