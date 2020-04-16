@@ -44,7 +44,7 @@ Allow a model to be imported through a relation, you need to follow the steps be
     }
     ```
   - <b>Relation</b>
-    Add the action as below, this should hide it from all the views but currenlty due a bug in Nova it still shows. The after function isn't required, but is the only way to for example hook the imported models to their parent model, this isn't done automatically because of all the differences in different codebases:
+    Add the action as below, this should hide it also from all the views. The after function isn't required, but is the only way to for example hook the imported models to their parent model, this isn't done automatically because of all the differences in different codebases:
     ```PHP
     public function actions(Request $request)
     {

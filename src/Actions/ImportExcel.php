@@ -198,7 +198,7 @@ class ImportExcel extends Action
     {
         return array_merge(
             [
-                File::make(__('File')),
+                File::make(__('File'))->rules(['required', 'file']),
             ],
             $this->additionalFields
         );
