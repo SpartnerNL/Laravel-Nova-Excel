@@ -165,9 +165,6 @@ class ImportExcel extends Action
         $this->showOnDetail = $value;
         $this->showOnIndex = $value;
 
-        $this->onlyOnIndex = false;
-        $this->onlyOnDetail = false;
-
         return $this;
     }
 
