@@ -159,6 +159,18 @@ class ImportExcel extends Action
         return 'import-excel';
     }
 
+    public function visible(bool $value)
+    {
+        $this->showOnTableRow = $value;
+        $this->showOnDetail = $value;
+        $this->showOnIndex = $value;
+
+        $this->onlyOnIndex = false;
+        $this->onlyOnDetail = false;
+
+        return $this;
+    }
+
     /**
      * @param \Laravel\Nova\Fields\Field $field
      *
