@@ -3,10 +3,11 @@
 namespace Maatwebsite\LaravelNovaExcel\Imports;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Resource;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithBatchInserts;
+// use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -16,7 +17,7 @@ use Maatwebsite\LaravelNovaExcel\Concerns\WithColumnMappings;
 use Maatwebsite\LaravelNovaExcel\Concerns\WithRowValidation;
 use Maatwebsite\LaravelNovaExcel\Models\Import;
 
-class ResourceImport implements ToModel, WithStartRow, WithBatchInserts, WithChunkReading, WithValidation
+class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithValidation
 {
     use BelongsToAction;
     use WithRowValidation;
@@ -32,6 +33,16 @@ class ResourceImport implements ToModel, WithStartRow, WithBatchInserts, WithChu
      * @var NovaRequest
      */
     protected $request;
+
+    /**
+     * @var callable
+     */
+    protected $onModelCreatedCallback;
+
+    /**
+     * @var callable
+     */
+    protected $onModelQueryCallback;
 
     /**
      * @param Import      $import
@@ -56,10 +67,34 @@ class ResourceImport implements ToModel, WithStartRow, WithBatchInserts, WithChu
             return null;
         }
 
-        $model = $this->import
-            ->getModelInstance()
-            ->newInstance()
-            ->forceFill($attributes);
+        $modelInstance = $this->import
+            ->getModelInstance();
+
+        $model = null;
+        $action = (object) $this->request->input('action');
+        $meta = (object)  $this->request->input('meta', []);
+        if (isset($action) && $action->uriKey === 're-import-excel') {
+            $matchOn = $this->request->input('matchOn');
+            $match = array_filter($attributes, function ($key) use ($matchOn) {
+                return in_array($key, $matchOn);
+            }, ARRAY_FILTER_USE_KEY);
+            $model = $modelInstance
+                ->where($match)
+                ->when(is_callable($this->onModelQueryCallback), function ($query) use ($meta) {
+                    return ($this->onModelQueryCallback)($query, $meta);
+                })
+                ->firstOr(function () use ($modelInstance) {
+                    return $modelInstance
+                        ->newInstance();
+                });
+        } else {
+            $model = $modelInstance
+                ->newInstance();
+        }
+
+        $model = $model->forceFill($attributes);
+
+        if (is_callable($this->onModelCreatedCallback)) $model = ($this->onModelCreatedCallback)($model, $meta);
 
         if ($this->shouldKeepTrackOfImport($model)) {
             $this->associateImport($model);
@@ -114,5 +149,19 @@ class ResourceImport implements ToModel, WithStartRow, WithBatchInserts, WithChu
     protected function resource()
     {
         return $this->import->getResourceInstance();
+    }
+
+    public function onModelCreated($callback)
+    {
+        $this->onModelCreatedCallback = $callback;
+
+        return $this;
+    }
+
+    public function onModelQuery($callback)
+    {
+        $this->onModelQueryCallback = $callback;
+
+        return $this;
     }
 }

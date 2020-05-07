@@ -35,7 +35,7 @@ class UploadsController extends Controller
             $actualResource !== $resource ? $resource : null
         );
 
-        return response()->json(['result' => 'success', 'upload' => $upload->getKey(), 'meta' => $request->except('file')]);
+        return response()->json(['result' => 'success', 'upload' => $upload->getKey(), 'meta' => $request->except(['file', 'action'])]);
     }
 
     private function getResourceName($resource)

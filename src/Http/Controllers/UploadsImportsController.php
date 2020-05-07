@@ -55,7 +55,7 @@ class UploadsImportsController extends Controller
             if (is_callable($action->afterCallback)) {
                 ($action->afterCallback)(
                     $import->models,
-                    (object)($request->input('meta', []))
+                    (object) ($request->input('meta', []))
                 );
             }
 
@@ -86,9 +86,16 @@ class UploadsImportsController extends Controller
      */
     protected function action(Resource $resource, NovaRequest $request)
     {
-        return collect($resource->actions($request))->first(function (Action $action) {
-            return $action instanceof ImportExcel;
-        });
+        $actions = collect($resource->actions($request));
+        if ($request->has('action')) {
+            $action = (object) $request->input('action');
+            return $actions->first(function (Action $a) use ($action) {
+                return $a->uriKey() === $action->uriKey;
+            });
+        } else return $actions
+            ->first(function (Action $action) {
+                return $action instanceof ImportExcel;
+            });
     }
 
     /**

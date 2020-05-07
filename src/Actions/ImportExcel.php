@@ -16,6 +16,20 @@ class ImportExcel extends Action
     protected $headingRow = true;
 
     /**
+     * Indicates if this import action is available on the resource index view.
+     *
+     * @var bool
+     */
+    public $showImportActionOnIndex = true;
+
+    /**
+     * Indicates if this import action is available on the resource detail view.
+     *
+     * @var bool
+     */
+    public $showImportActionOnDetail = true;
+
+    /**
      * @var int
      */
     protected $previewRows = 10;
@@ -41,6 +55,16 @@ class ImportExcel extends Action
     public $afterCallback;
 
     /**
+     * @var callable
+     */
+    protected $onModelCreatedCallback;
+
+    /**
+     * @var callable
+     */
+    protected $onModelQueryCallback;
+
+    /**
      * @param string|null $name
      */
     public function __construct(string $name = null)
@@ -48,12 +72,27 @@ class ImportExcel extends Action
         $this->name = $name;
         $this->withoutActionEvents();
         $this->withoutConfirmation();
-        $this->onlyOnDetail(false);
-        $this->onlyOnIndex(false);
+        $this->visible(false);
+        $this->visibleImport(false);
+        $this->showImportOnIndex();
         $this->availableForEntireResource(false);
         $this->usingImport(function ($import, $request) {
-            return new ResourceImport($import, $request);
+            return (new ResourceImport($import, $request))
+                ->onModelCreated($this->onModelCreatedCallback)
+                ->onModelQuery($this->onModelQueryCallback);
         });
+    }
+
+    /**
+     * Set the action to not execute instantly.
+     *
+     * @return $this
+     */
+    public function withConfirmation()
+    {
+        $this->withoutConfirmation = false;
+
+        return $this;
     }
 
     /**
@@ -168,6 +207,14 @@ class ImportExcel extends Action
         return $this;
     }
 
+    public function visibleImport(bool $value)
+    {
+        $this->showImportActionOnDetail = $value;
+        $this->showImportActionOnIndex = $value;
+
+        return $this;
+    }
+
     /**
      * @param \Laravel\Nova\Fields\Field $field
      *
@@ -182,11 +229,35 @@ class ImportExcel extends Action
     /**
      * @param callable $callback
      *
-     * @return void
+     * @return this
      */
     public function after(callable $callback)
     {
         $this->afterCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return this
+     */
+    public function onModelCreated($callback)
+    {
+        $this->onModelCreatedCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return this
+     */
+    public function onModelQuery($callback)
+    {
+        $this->onModelQueryCallback = $callback;
 
         return $this;
     }
@@ -201,6 +272,37 @@ class ImportExcel extends Action
                 File::make(__('File'))->rules(['required', 'file']),
             ],
             $this->additionalFields
+        );
+    }
+
+
+    public function showImportOnIndex(bool $bool = true)
+    {
+        $this->showImportActionOnIndex = $bool;
+
+        return $this;
+    }
+
+    public function showImportOnDetail(bool $bool = true)
+    {
+        $this->showImportActionOnDetail = $bool;
+
+        return $this;
+    }
+
+    /**
+     * Prepare the action for JSON serialization.
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return array_replace(
+            parent::jsonSerialize(),
+            [
+                'showImportOnIndex' => $this->showImportActionOnIndex,
+                'showImportOnDetail' => $this->showImportActionOnDetail
+            ]
         );
     }
 }

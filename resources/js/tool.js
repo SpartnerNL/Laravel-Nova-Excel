@@ -1,10 +1,12 @@
 import Upload from "./components/Upload";
 import Preview from "./components/Preview";
 import ImportToolbar from "./components/ImportToolbar";
+import ReImportToolbar from "./components/ReImportToolbar";
 import ImportRetryButton from "./components/ImportRetryButton";
 
 Nova.booting((Vue, router) => {
     Vue.component('custom-index-toolbar', ImportToolbar);
+    Vue.component('custom-detail-toolbar', ReImportToolbar);
     Vue.component('index-import-retry-button', ImportRetryButton);
 
     router.addRoutes([

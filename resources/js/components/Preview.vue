@@ -1,6 +1,6 @@
 <template>
     <div>
-        <heading class="mb-6">Import</heading>
+        <heading class="mb-6">{{ action.name }}</heading>
 
         <card class="flex flex-col">
             <div class="p-8">
@@ -23,26 +23,35 @@
                 </div>
             </div>
 
-            <table class="table w-full">
-                <thead>
-                <tr>
-                    <th v-for="heading in headings">{{ heading }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td v-for="(heading, headingIndex) in headings" :key="headingIndex" class="text-center">
-                        <select class="w-full form-control form-select" v-model="mapping[headingIndex]">
-                            <option value="">- {{ __('Ignore this column') }} -</option>
-                            <option v-for="field in fields" :key="field.attribute" :value="field.attribute">{{ field.name }}</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr v-for="row in rows">
-                    <td v-for="(col, index) in row" :key="index">{{ col }}</td>
-                </tr>
-                </tbody>
-            </table>
+            <div style="overflow-x: scroll" class="Flipped">
+                <table class="table w-full Content">
+                    <thead>
+                        <tr>
+                            <th v-for="heading in headings">{{ heading }}</th>
+                        </tr>
+                        <tr>
+                            <th v-for="(heading, headingIndex) in headings" :key="headingIndex" class="text-center">
+                                <select class="w-full form-control form-select" v-model="mapping[headingIndex]">
+                                    <option value="">- {{ __('Ignore this column') }} -</option>
+                                    <option v-for="field in fields" :key="field.attribute" :value="field.attribute">{{ field.name }}</option>
+                                </select>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in rows">
+                            <td v-for="(col, index) in row" :key="index">{{ col }}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td v-for="(heading, headingIndex) in headings" :key="headingIndex" class="text-center">
+                                <input type="checkbox" v-model.number="matchOn" :value="headingIndex"></input>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
 
             <div class="bg-30 flex px-8 py-4">
                 <button class="btn btn-link mr-4">{{ __('Cancel')}}</button>
@@ -58,7 +67,8 @@
     export default {
         props: [
             'upload',
-            'meta'
+            'meta',
+            'action'
         ],
         data() {
             return {
@@ -71,6 +81,7 @@
                 importing: false,
                 errors: [],
                 errorMessage: null,
+                matchOn: []
             }
         },
         async mounted() {
@@ -93,10 +104,14 @@
                 this.errors = [];
                 this.errorMessage = null;
 
+
+
                 try {
                     await window.Nova.request().post(`/nova-vendor/maatwebsite/laravel-nova-excel/uploads/${this.upload}/import`, {
                         mapping: this.mapping,
-                        meta: this.meta
+                        meta: this.meta,
+                        action: this.action,
+                        matchOn: this.matchOn.map(x => this.mapping[x]).filter(Boolean)
                     });
 
                     this.$toasted.show('All data imported!', {type: "success"});
@@ -111,3 +126,12 @@
         },
     }
 </script>
+
+<style>
+.Flipped, .Flipped .Content
+{
+    transform:rotateX(180deg);
+    -ms-transform:rotateX(180deg); /* IE 9 */
+    -webkit-transform:rotateX(180deg); /* Safari and Chrome */
+}
+</style>
