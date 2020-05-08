@@ -42,7 +42,8 @@ export default {
   mixins: [InteractsWithResourceInformation],
 
   props: {
-    resourceName: String
+    resourceName: String,
+    resourceId: String
   },
 
   data() {
@@ -91,7 +92,7 @@ export default {
 
           this.$router.push({
             name: "excel-imports-preview",
-            params: { upload, meta, action: this.importAction }
+            params: { upload, meta, action: this.importAction, resourceName: this.resourceName, resourceId: this.resourceId  }
           });
         })
         .catch(error => {

@@ -43,7 +43,7 @@
                             <td v-for="(col, index) in row" :key="index">{{ col }}</td>
                         </tr>
                     </tbody>
-                    <tfoot>
+                    <tfoot v-if="!action || action.uriKey === 're-import-excel'">
                         <tr>
                             <td v-for="(heading, headingIndex) in headings" :key="headingIndex" class="text-center">
                                 <input type="checkbox" v-model.number="matchOn" :value="headingIndex"></input>
@@ -68,7 +68,9 @@
         props: [
             'upload',
             'meta',
-            'action'
+            'action',
+            'resourceName',
+            'resourceId'
         ],
         data() {
             return {
@@ -110,11 +112,26 @@
                     await window.Nova.request().post(`/nova-vendor/maatwebsite/laravel-nova-excel/uploads/${this.upload}/import`, {
                         mapping: this.mapping,
                         meta: this.meta,
+                        resourceName: this.resourceName,
+                        resourceId: this.resourceId,
                         action: this.action,
                         matchOn: this.matchOn.map(x => this.mapping[x]).filter(Boolean)
                     });
 
                     this.$toasted.show('All data imported!', {type: "success"});
+                    if (this.resourceName && !this.resourceId) this.$router.push({
+                        name: 'index',
+                        params: {
+                            resourceName: this.resourceName
+                        }
+                    });
+                    else if (this.resourceName && this.resourceId) this.$router.push({
+                        name: 'detail',
+                        params: {
+                            resourceName: this.resourceName,
+                            resourceId: this.resourceId
+                        }
+                    });
                     this.importing = false;
                 } catch ({response: {data: {errors, message}}}) {
                     this.importing = false;
