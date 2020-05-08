@@ -50,6 +50,11 @@ class ImportExcel extends Action
     protected $additionalFields = [];
 
     /**
+     * @var array
+     */
+    protected $uniqueColumns = [];
+
+    /**
      * @var callable
      */
     public $afterCallback;
@@ -58,6 +63,11 @@ class ImportExcel extends Action
      * @var callable
      */
     protected $onModelCreatedCallback;
+
+    /**
+     * @var callable
+     */
+    protected $onRowValidationCallback;
 
     /**
      * @var callable
@@ -79,6 +89,7 @@ class ImportExcel extends Action
         $this->usingImport(function ($import, $request) {
             return (new ResourceImport($import, $request))
                 ->onModelCreated($this->onModelCreatedCallback)
+                ->onRowValidation($this->onRowValidationCallback)
                 ->onModelQuery($this->onModelQueryCallback);
         });
     }
@@ -88,7 +99,7 @@ class ImportExcel extends Action
      *
      * @return $this
      */
-    public function withConfirmation()
+    public function withConfirmation(): self
     {
         $this->withoutConfirmation = false;
 
@@ -110,7 +121,7 @@ class ImportExcel extends Action
      *
      * @return $this
      */
-    public function usingImport(callable $callback)
+    public function usingImport(callable $callback): self
     {
         $this->usingImport = $callback;
 
@@ -149,11 +160,30 @@ class ImportExcel extends Action
     }
 
     /**
+     * @return bool
+     */
+    public function usesUniqueColumns(): bool
+    {
+        return !empty($this->uniqueColumns);
+    }
+
+    public function getUniqueColumns(): array
+    {
+        return $this->uniqueColumns;
+    }
+
+    public function unique(array $columns): self
+    {
+        $this->uniqueColumns = $columns;
+        return $this;
+    }
+
+    /**
      * @param int $rows
      *
      * @return ImportExcel
      */
-    public function previewRows(int $rows)
+    public function previewRows(int $rows): self
     {
         $this->previewRows = $rows;
 
@@ -173,7 +203,7 @@ class ImportExcel extends Action
      *
      * @return ImportExcel
      */
-    public function map(callable $callback)
+    public function map(callable $callback): self
     {
         $this->map = $callback;
 
@@ -198,7 +228,7 @@ class ImportExcel extends Action
         return 'import-excel';
     }
 
-    public function visible(bool $value)
+    public function visible(bool $value): self
     {
         $this->showOnTableRow = $value;
         $this->showOnDetail = $value;
@@ -207,7 +237,7 @@ class ImportExcel extends Action
         return $this;
     }
 
-    public function visibleImport(bool $value)
+    public function visibleImport(bool $value): self
     {
         $this->showImportActionOnDetail = $value;
         $this->showImportActionOnIndex = $value;
@@ -220,7 +250,7 @@ class ImportExcel extends Action
      *
      * @return void
      */
-    public function addField(\Laravel\Nova\Fields\Field $field)
+    public function addField(\Laravel\Nova\Fields\Field $field): self
     {
         array_push($this->additionalFields, $field);
         return $this;
@@ -231,7 +261,7 @@ class ImportExcel extends Action
      *
      * @return this
      */
-    public function after(callable $callback)
+    public function after(callable $callback): self
     {
         $this->afterCallback = $callback;
 
@@ -243,7 +273,7 @@ class ImportExcel extends Action
      *
      * @return this
      */
-    public function onModelCreated($callback)
+    public function onModelCreated($callback): self
     {
         $this->onModelCreatedCallback = $callback;
 
@@ -255,7 +285,19 @@ class ImportExcel extends Action
      *
      * @return this
      */
-    public function onModelQuery($callback)
+    public function onRowValidation($callback): self
+    {
+        $this->onRowValidationCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return this
+     */
+    public function onModelQuery($callback): self
     {
         $this->onModelQueryCallback = $callback;
 
@@ -276,14 +318,14 @@ class ImportExcel extends Action
     }
 
 
-    public function showImportOnIndex(bool $bool = true)
+    public function showImportOnIndex(bool $bool = true): self
     {
         $this->showImportActionOnIndex = $bool;
 
         return $this;
     }
 
-    public function showImportOnDetail(bool $bool = true)
+    public function showImportOnDetail(bool $bool = true): self
     {
         $this->showImportActionOnDetail = $bool;
 

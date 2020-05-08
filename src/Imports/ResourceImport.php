@@ -42,6 +42,11 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
     /**
      * @var callable
      */
+    protected $onRowValidationCallback;
+
+    /**
+     * @var callable
+     */
     protected $onModelQueryCallback;
 
     /**
@@ -63,7 +68,7 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
     {
         $attributes = $this->map($row);
 
-        if (count(array_filter($attributes)) === 0) {
+        if (count(array_filter($attributes)) === 0 || (is_callable($this->onRowValidationCallback) && !($this->onRowValidationCallback)($attributes))) {
             return null;
         }
 
@@ -151,14 +156,36 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
         return $this->import->getResourceInstance();
     }
 
-    public function onModelCreated($callback)
+    /**
+     * @param callable $callback
+     *
+     * @return this
+     */
+    public function onModelCreated($callback): self
     {
         $this->onModelCreatedCallback = $callback;
 
         return $this;
     }
 
-    public function onModelQuery($callback)
+    /**
+     * @param callable $callback
+     *
+     * @return this
+     */
+    public function onRowValidation($callback): self
+    {
+        $this->onRowValidationCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return this
+     */
+    public function onModelQuery($callback): self
     {
         $this->onModelQueryCallback = $callback;
 
