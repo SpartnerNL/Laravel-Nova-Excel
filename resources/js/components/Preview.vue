@@ -101,9 +101,17 @@
                 return carry;
             }, {});
 
+            console.log('Setting up mapping');
             this.headings.map((value, key) => {
                 // Automatically map if it exists
-                if (keyMapping.hasOwnProperty(value)) this.mapping[key] = keyMapping[value].attribute;
+                if (keyMapping.hasOwnProperty(value)) {
+                    console.log('Found corresponding column', {
+                        key,
+                        value,
+                        attribute: keyMapping[value].attribute
+                    });
+                    this.mapping[key] = keyMapping[value].attribute;
+                }
                 else this.mapping[key] = '';
             })
         },
