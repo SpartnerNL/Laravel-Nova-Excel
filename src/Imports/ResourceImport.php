@@ -84,11 +84,13 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
             $match = array_filter($attributes, function ($key) use ($matchOn) {
                 return in_array($key, $matchOn);
             }, ARRAY_FILTER_USE_KEY);
-            $model = $this->onModelQueryExecute(
-                $modelInstance
-                    ->where($match),
-                $meta
-            )
+            $model = empty($match)
+                ? $modelInstance->newInstance()
+                : $this->onModelQueryExecute(
+                    $modelInstance
+                        ->where($match),
+                    $meta
+                )
                 ->firstOr(function () use ($modelInstance) {
                     return $modelInstance
                         ->newInstance();
@@ -199,7 +201,7 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
      *
      * @return Model
      */
-    public function onModelCreatedExecute($model, object $meta) : Model
+    public function onModelCreatedExecute($model, object $meta): Model
     {
         return is_callable($this->onModelCreatedCallback) ? ($this->onModelCreatedCallback)($model, $meta) : $model;
     }
