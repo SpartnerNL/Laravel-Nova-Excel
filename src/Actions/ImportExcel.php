@@ -5,6 +5,7 @@ namespace Maatwebsite\LaravelNovaExcel\Actions;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\File;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Maatwebsite\LaravelNovaExcel\Imports\QueuedResourceImport;
 use Maatwebsite\LaravelNovaExcel\Imports\ResourceImport;
 use Maatwebsite\LaravelNovaExcel\Models\Import;
 
@@ -75,6 +76,11 @@ class ImportExcel extends Action
     protected $onModelQueryCallback;
 
     /**
+     * @var boolean
+     */
+    protected $shouldBeQueued = false;
+
+    /**
      * @param string|null $name
      */
     public function __construct(string $name = null)
@@ -87,7 +93,9 @@ class ImportExcel extends Action
         $this->showImportOnIndex();
         $this->availableForEntireResource(false);
         $this->usingImport(function ($import, $request) {
-            return (new ResourceImport($import, $request))
+            return (($this->shouldBeQueued)
+                ? new QueuedResourceImport($import, $request)
+                : new ResourceImport($import, $request))
                 ->onModelCreated($this->onModelCreatedCallback)
                 ->onRowValidation($this->onRowValidationCallback)
                 ->onModelQuery($this->onModelQueryCallback);
@@ -226,6 +234,13 @@ class ImportExcel extends Action
     public function uriKey()
     {
         return 'import-excel';
+    }
+
+    public function queue(bool $value = true): self
+    {
+        $this->shouldBeQueued = $value;
+
+        return $this;
     }
 
     public function visible(bool $value): self

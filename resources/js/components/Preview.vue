@@ -96,8 +96,15 @@
             this.rowCount = totalRows;
             this.columnCount = rows[0].length;
 
+            const keyMapping = this.fields.reduce((carry, field) => {
+                carry[field.attribute] = field;
+                return carry;
+            }, {});
+
             this.headings.map((value, key) => {
-                this.mapping[key] = '';
+                // Automatically map if it exists
+                if (keyMapping.hasOwnProperty(value)) this.mapping[key] = keyMapping[value].attribute;
+                else this.mapping[key] = '';
             })
         },
         methods: {

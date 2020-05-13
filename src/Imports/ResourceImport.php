@@ -2,6 +2,7 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Imports;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -68,7 +69,7 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
     {
         $attributes = $this->map($row);
 
-        if (count(array_filter($attributes)) === 0 || (is_callable($this->onRowValidationCallback) && !($this->onRowValidationCallback)($attributes))) {
+        if (count(array_filter($attributes)) === 0 || $this->onRowValidationExecute($attributes)) {
             return null;
         }
 
@@ -83,11 +84,11 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
             $match = array_filter($attributes, function ($key) use ($matchOn) {
                 return in_array($key, $matchOn);
             }, ARRAY_FILTER_USE_KEY);
-            $model = $modelInstance
-                ->where($match)
-                ->when(is_callable($this->onModelQueryCallback), function ($query) use ($meta) {
-                    return ($this->onModelQueryCallback)($query, $meta);
-                })
+            $model = $this->onModelQueryExecute(
+                $modelInstance
+                    ->where($match),
+                $meta
+            )
                 ->firstOr(function () use ($modelInstance) {
                     return $modelInstance
                         ->newInstance();
@@ -99,7 +100,7 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
 
         $model = $model->forceFill($attributes);
 
-        if (is_callable($this->onModelCreatedCallback)) $model = ($this->onModelCreatedCallback)($model, $meta);
+        $model = $this->onModelCreatedExecute($model, $meta);
 
         if ($this->shouldKeepTrackOfImport($model)) {
             $this->associateImport($model);
@@ -190,5 +191,37 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
         $this->onModelQueryCallback = $callback;
 
         return $this;
+    }
+
+    /**
+     * @param Model|Model[]|null $model
+     * @param object $meta
+     *
+     * @return Model
+     */
+    public function onModelCreatedExecute($model, object $meta) : Model
+    {
+        return is_callable($this->onModelCreatedCallback) ? ($this->onModelCreatedCallback)($model, $meta) : $model;
+    }
+
+    /**
+     * @param array $attributes
+     *
+     * @return bool
+     */
+    public function onRowValidationExecute(array $attributes): bool
+    {
+        return (is_callable($this->onRowValidationCallback) && !($this->onRowValidationCallback)($attributes));
+    }
+
+    /**
+     * @param Builder $query
+     * @param object $meta
+     *
+     * @return Builder
+     */
+    public function onModelQueryExecute(Builder $query, object $meta): Builder
+    {
+        return is_callable($this->onModelQueryCallback) ? ($this->onModelQueryCallback)($query, $meta) : $query;
     }
 }
