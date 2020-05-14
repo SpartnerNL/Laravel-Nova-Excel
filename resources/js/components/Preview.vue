@@ -131,7 +131,7 @@
 
 
                 try {
-                    await window.Nova.request().post(`/nova-vendor/maatwebsite/laravel-nova-excel/uploads/${this.upload}/import`, {
+                    let { data: { status } } = await window.Nova.request().post(`/nova-vendor/maatwebsite/laravel-nova-excel/uploads/${this.upload}/import`, {
                         mapping: this.mapping,
                         meta: this.meta,
                         resourceName: this.resourceName,
@@ -140,7 +140,18 @@
                         matchOn: this.matchOn.map(x => this.mapping[x]).filter(Boolean)
                     });
 
-                    this.$toasted.show('All data imported!', {type: "success"});
+                    console.log('STATUS', status);
+                    switch (status) {
+                        case 'QUEUED':
+                            this.$toasted.show('Import is queued, please check back later!', {type: "success"});
+                            break;
+
+                        default:
+                            this.$toasted.show('All data imported!', {type: "success"});
+                            break;
+                    }
+
+
                     if (this.resourceName && !this.resourceId) this.$router.push({
                         name: 'index',
                         params: {

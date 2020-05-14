@@ -2,6 +2,7 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
+use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -46,7 +47,7 @@ class UploadsImportsController extends Controller
         try {
             $action = $this->action($import->getResourceInstance(), $request);
 
-            $importer->import(
+            $imported = $importer->import(
                 $action->getImportObject($import, $request),
                 $import->upload->path,
                 $import->upload->disk
@@ -54,14 +55,10 @@ class UploadsImportsController extends Controller
 
             if (is_callable($action->afterCallback)) {
                 ($action->afterCallback)(
-                    $import->models,
+                    $import,
                     (object) ($request->input('meta', []))
                 );
             }
-
-            $import->update([
-                'status' => Import::STATUS_COMPLETED,
-            ]);
         } catch (ValidationException $e) {
             $import->update([
                 'status' => Import::STATUS_FAILED,
@@ -74,7 +71,9 @@ class UploadsImportsController extends Controller
         }
 
         return new JsonResponse([
-            'status' => 'OK',
+            'status' => ($imported instanceof PendingDispatch)
+            ? 'QUEUED'
+            : 'OK',
         ]);
     }
 

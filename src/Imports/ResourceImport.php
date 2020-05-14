@@ -4,6 +4,7 @@ namespace Maatwebsite\LaravelNovaExcel\Imports;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\Excel\Concerns\ToModel;
 // use Maatwebsite\Excel\Concerns\WithBatchInserts;
@@ -78,6 +79,12 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
         $this->meta = (object) $this->request->input('meta');
         $this->matchOn = $this->request->input('matchOn');
         $this->action = (object) $this->request->input('action');
+
+        Log::info('Intialized import', [
+            'meta' => $this->meta,
+            'matchOn' => $this->matchOn,
+            'action' => $this->action
+        ]);
     }
 
     /**
@@ -89,7 +96,7 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
     {
         $attributes = $this->map($row);
 
-        if (count(array_filter($attributes)) === 0 || $this->onRowValidationExecute($attributes)) {
+        if (!isset($attributes) || count(array_filter($attributes)) === 0 || !$this->onRowValidationExecute($attributes)) {
             return null;
         }
 
@@ -110,7 +117,7 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
                 : $this->onModelQueryExecute(
                     $modelInstance
                         ->where($match),
-                        $this->meta
+                    $this->meta
                 )
                 ->firstOr(function () use ($modelInstance) {
                     return $modelInstance
