@@ -4,8 +4,6 @@ namespace Maatwebsite\LaravelNovaExcel\Imports;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Maatwebsite\Excel\Concerns\ToModel;
 // use Maatwebsite\Excel\Concerns\WithBatchInserts;
@@ -36,6 +34,21 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
     protected $request;
 
     /**
+     * @var object
+     */
+    protected $meta;
+
+    /**
+     * @var array
+     */
+    protected $matchOn;
+
+    /**
+     * @var object
+     */
+    protected $action;
+
+    /**
      * @var callable
      */
     protected $onModelCreatedCallback;
@@ -58,6 +71,13 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
     {
         $this->import  = $import;
         $this->request = $request;
+
+        // Instead of setting these on each loop, instead set them once
+        // also, this way we will loose the requirement of the $request variable
+        // which allows us to serialize the import
+        $this->meta = (object) $this->request->input('meta');
+        $this->matchOn = $this->request->input('matchOn');
+        $this->action = (object) $this->request->input('action');
     }
 
     /**
@@ -77,19 +97,20 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
             ->getModelInstance();
 
         $model = null;
-        $action = (object) $this->request->input('action');
-        $meta = (object)  $this->request->input('meta', []);
-        if (isset($action) && $action->uriKey === 're-import-excel') {
-            $matchOn = $this->request->input('matchOn');
-            $match = array_filter($attributes, function ($key) use ($matchOn) {
-                return in_array($key, $matchOn);
+        // $action = (object) $this->request->input('action');
+        // $meta = (object)  $this->request->input('meta', []);
+        if (isset($this->action) && $this->action->uriKey === 're-import-excel') {
+            // $matchOn = $this->request->input('matchOn');
+            $match = array_filter($attributes, function ($key) {
+                return in_array($key, $this->matchOn);
             }, ARRAY_FILTER_USE_KEY);
+
             $model = empty($match)
                 ? $modelInstance->newInstance()
                 : $this->onModelQueryExecute(
                     $modelInstance
                         ->where($match),
-                    $meta
+                        $this->meta
                 )
                 ->firstOr(function () use ($modelInstance) {
                     return $modelInstance
@@ -102,7 +123,7 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
 
         $model = $model->forceFill($attributes);
 
-        $model = $this->onModelCreatedExecute($model, $meta);
+        $model = $this->onModelCreatedExecute($model, $this->meta);
 
         if ($this->shouldKeepTrackOfImport($model)) {
             $this->associateImport($model);

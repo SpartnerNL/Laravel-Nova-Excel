@@ -81,6 +81,11 @@ class ImportExcel extends Action
     protected $shouldBeQueued = false;
 
     /**
+     * @var string
+     */
+    protected $queuedResourceClass;
+
+    /**
      * @param string|null $name
      */
     public function __construct(string $name = null)
@@ -94,7 +99,7 @@ class ImportExcel extends Action
         $this->availableForEntireResource(false);
         $this->usingImport(function ($import, $request) {
             return (($this->shouldBeQueued)
-                ? new QueuedResourceImport($import, $request)
+                ? new $this->queuedResourceClass($import, $request)
                 : new ResourceImport($import, $request))
                 ->onModelCreated($this->onModelCreatedCallback)
                 ->onRowValidation($this->onRowValidationCallback)
@@ -236,9 +241,11 @@ class ImportExcel extends Action
         return 'import-excel';
     }
 
-    public function queue(bool $value = true): self
+    public function queue(bool $value = true, ?string $class = QueuedResourceImport::class): self
     {
         $this->shouldBeQueued = $value;
+
+        $this->queuedResourceClass = $class;
 
         return $this;
     }
