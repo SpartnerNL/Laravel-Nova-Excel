@@ -56,7 +56,8 @@ class UploadsImportsController extends Controller
             if (is_callable($action->afterCallback)) {
                 ($action->afterCallback)(
                     $import,
-                    (object) ($request->input('meta', []))
+                    (object) ($request->input('meta', [])),
+                    ($imported instanceof PendingDispatch)
                 );
             }
         } catch (ValidationException $e) {

@@ -5,6 +5,7 @@ namespace Maatwebsite\LaravelNovaExcel\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Nova;
 
 /**
@@ -107,8 +108,6 @@ class Import extends Model
      */
     public function models()
     {
-        $model = Nova::modelInstanceForKey($this->resource);
-
-        return $this->hasMany(get_class($model));
+        return $this->hasMany(get_class($this->getModelInstance()));
     }
 }

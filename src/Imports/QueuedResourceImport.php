@@ -14,7 +14,6 @@ use Maatwebsite\LaravelNovaExcel\Models\Import;
 class QueuedResourceImport extends ResourceImport implements ShouldQueue, WithEvents
 {
 
-
     public function registerEvents(): array
     {
         return [
@@ -27,14 +26,19 @@ class QueuedResourceImport extends ResourceImport implements ShouldQueue, WithEv
                 if (isset($this->import)) $this->import->update([
                     'status' => Import::STATUS_RUNNING
                 ]);
+                $this->beforeImport();
             },
             AfterImport::class => function (AfterImport $event) {
                 if (isset($this->import)) $this->import->update([
                     'status' => Import::STATUS_COMPLETED
                 ]);
+                $this->afterImport();
             }
         ];
     }
+
+    protected function beforeImport(): void {}
+    protected function afterImport(): void {}
 
     /**
      * Remove some attributes from this class when serializing,
