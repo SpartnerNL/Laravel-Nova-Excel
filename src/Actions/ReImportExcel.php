@@ -24,4 +24,16 @@ class ReImportExcel extends ImportExcel
     {
         return 're-import-excel';
     }
+
+    public function defaultMatchOn(array $matchOn) {
+        return $this->withMeta([
+            'defaultMatchOn' => $matchOn
+        ]);
+    }
+
+    public function requiredMatchOn(array $matchOn) {
+        return $this->withMeta([
+            'requiredMatchOn' => $matchOn
+        ]);
+    }
 }
