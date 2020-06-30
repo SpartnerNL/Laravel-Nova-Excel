@@ -116,6 +116,7 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
                 ? $modelInstance->newInstance()
                 : $this->onModelQueryExecute(
                     $modelInstance
+                        ->withTrashed()
                         ->where($match),
                     $this->meta
                 )
@@ -128,7 +129,18 @@ class ResourceImport implements ToModel, WithStartRow, WithChunkReading, WithVal
                 ->newInstance();
         }
 
+        Log::info('Import testing:', [
+            'match_empty' => empty($match),
+            'model_type' => get_class($model),
+            'model_methods' => get_class_methods($model),
+            'method_exists:withTrashed' => method_exists($modelInstance, 'withTrashed'),
+            'method_exists:trashed' => method_exists($model, 'trashed'),
+            'model_trashed' => method_exists($model, 'trashed') ? $model->trashed() : null
+        ]);
+
         $model = $model->forceFill($attributes);
+
+        if (method_exists($model, 'trashed') && $model->trashed()) $model->deleted_at = null;
 
         $model = $this->onModelCreatedExecute($model, $this->meta);
 
