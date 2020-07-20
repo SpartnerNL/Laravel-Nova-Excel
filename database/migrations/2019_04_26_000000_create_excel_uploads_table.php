@@ -17,6 +17,7 @@ class CreateExcelUploadsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id')->nullable()->index();
             $table->string('resource');
+            $table->string('parent_resource')->nullable();
             $table->string('disk')->nullable();
             $table->string('path')->nullable();
             $table->string('filename');

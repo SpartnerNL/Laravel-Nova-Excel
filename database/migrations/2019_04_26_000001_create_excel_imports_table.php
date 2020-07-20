@@ -18,6 +18,7 @@ class CreateExcelImportsTable extends Migration
             $table->unsignedInteger('upload_id');
             $table->unsignedInteger('user_id')->nullable()->index();
             $table->string('resource');
+            $table->string('parent_resource')->nullable();
             $table->json('mapping');
             $table->string('status')->default('waiting');
             //$table->timestamp('undo_at')->nullable();

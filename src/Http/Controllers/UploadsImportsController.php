@@ -2,6 +2,7 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Http\Controllers;
 
+use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
@@ -44,15 +45,21 @@ class UploadsImportsController extends Controller
         ]);
 
         try {
-            $importer->import(
-                $this->action($import->getResourceInstance(), $request)->getImportObject($import, $request),
+            $action = $this->action($import->getResourceInstance(), $request);
+
+            $imported = $importer->import(
+                $action->getImportObject($import, $request),
                 $import->upload->path,
                 $import->upload->disk
             );
 
-            $import->update([
-                'status' => Import::STATUS_COMPLETED,
-            ]);
+            if (is_callable($action->afterCallback)) {
+                ($action->afterCallback)(
+                    $import,
+                    (object) ($request->input('meta', [])),
+                    ($imported instanceof PendingDispatch)
+                );
+            }
         } catch (ValidationException $e) {
             $import->update([
                 'status' => Import::STATUS_FAILED,
@@ -65,7 +72,9 @@ class UploadsImportsController extends Controller
         }
 
         return new JsonResponse([
-            'status' => 'OK',
+            'status' => ($imported instanceof PendingDispatch)
+            ? 'QUEUED'
+            : 'OK',
         ]);
     }
 
@@ -77,9 +86,16 @@ class UploadsImportsController extends Controller
      */
     protected function action(Resource $resource, NovaRequest $request)
     {
-        return collect($resource->actions($request))->first(function (Action $action) {
-            return $action instanceof ImportExcel;
-        });
+        $actions = collect($resource->actions($request));
+        if ($request->has('action')) {
+            $action = (object) $request->input('action');
+            return $actions->first(function (Action $a) use ($action) {
+                return $a->uriKey() === $action->uriKey;
+            });
+        } else return $actions
+            ->first(function (Action $action) {
+                return $action instanceof ImportExcel;
+            });
     }
 
     /**

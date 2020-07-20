@@ -66,7 +66,13 @@ class PreviewImport implements ToCollection, WithLimit, WithEvents, Responsable
             $this->headings = $collection->first()->keys();
         }
 
-        $this->rows = $collection->all();
+        $this->rows = $collection
+            ->reject(function ($row) {
+                return $row->every(function ($val) {
+                    return !isset($val);
+                });
+            })
+            ->toArray();
     }
 
     /**

@@ -7,6 +7,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Validation\ValidationException;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Http\Requests\ActionRequest;
+use Laravel\Nova\Nova;
 use Maatwebsite\LaravelNovaExcel\Models\Upload;
 
 class UploadsController extends Controller
@@ -20,18 +22,35 @@ class UploadsController extends Controller
      * @return JsonResponse
      * @throws ValidationException
      */
-    public function store(string $resource, NovaRequest $request)
+    public function store(ActionRequest $request, string $resource)
     {
-        $validated = $this->validate($request, [
-            'file' => 'required|file',
-        ]);
+        $request->validateFields();
+
+        $actualResource = $this->getResourceName($resource);
 
         $upload = Upload::forUploadedFile(
-            $validated['file'],
+            $request->file,
             $request->user(),
-            $resource
+            $actualResource !== $resource ? $actualResource : $resource,
+            $actualResource !== $resource ? $resource : null
         );
 
-        return response()->json(['result' => 'success', 'upload' => $upload->getKey()]);
+        return response()->json(['result' => 'success', 'upload' => $upload->getKey(), 'meta' => $request->except(['file', 'action'])]);
     }
+
+    private function getResourceName($resource)
+    {
+        try {
+            $model        = Nova::modelInstanceForKey($resource);
+            $resourceName = Nova::resourceForModel($model);
+
+            if (class_exists($resourceName) && property_exists($resourceName, 'import_as')) {
+                return ($resourceName::$import_as)::uriKey();
+            } else return $resource;
+
+        } catch (\Exception $e) {
+            return $resource;
+        }
+    }
+
 }

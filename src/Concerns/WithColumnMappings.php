@@ -14,15 +14,18 @@ trait WithColumnMappings
      */
     protected function mapRowToAttributes(array $row): array
     {
-        return collect($row)->mapWithKeys(function ($value, $column) {
-            $attribute = $this->columnToAttribute($column);
+        return collect($row)
+            ->mapWithKeys(function ($value, $column) {
+                $attribute = $this->columnToAttribute($column);
 
-            if (null === $attribute) {
-                return [null => null];
-            }
+                if (null === $attribute) {
+                    return [null => null];
+                }
 
-            return [$attribute => $this->processValue($value)];
-        })->filter()->all();
+                return [$attribute => $this->processValue($value)];
+            })->reject(function ($value, $key) {
+                return empty($key) || (empty($key) && empty($value));
+            })->all();
     }
 
     /**

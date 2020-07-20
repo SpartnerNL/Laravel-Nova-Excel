@@ -1,7 +1,7 @@
 <template>
   <div class="flex w-full justify-end items-center mx-3">
     <button
-      v-if="importAction && importAction.showImportOnIndex"
+      v-if="importAction && importAction.showImportOnDetail"
       @click="modalOpen = true"
       class="btn btn-default btn-primary"
       dusk="import-button"
@@ -38,7 +38,7 @@ import _ from "lodash";
 import { Errors, InteractsWithResourceInformation } from "laravel-nova";
 
 export default {
-  name: "import-toolbar",
+  name: "re-import-toolbar",
   mixins: [InteractsWithResourceInformation],
 
   props: {
@@ -69,7 +69,7 @@ export default {
 
       this.importAction = actions
         .filter(action => {
-          return action.uriKey === "import-excel";
+          return action.uriKey === "re-import-excel";
         })
         .shift();
     },
@@ -81,7 +81,8 @@ export default {
         method: "post",
         url: `/nova-vendor/maatwebsite/laravel-nova-excel/${this.resourceName}/upload`,
         params: {
-            action: this.importAction.uriKey
+            action: this.importAction.uriKey,
+            resource: this.resourceId
         },
         data: this.form(),
         headers: { "Content-Type": "multipart/form-data" }
@@ -92,7 +93,7 @@ export default {
 
           this.$router.push({
             name: "excel-imports-preview",
-            params: { upload, meta, action: this.importAction, resourceName: this.resourceName, resourceId: this.resourceId  }
+            params: { upload, meta, action: this.importAction, resourceName: this.resourceName, resourceId: this.resourceId }
           });
         })
         .catch(error => {
