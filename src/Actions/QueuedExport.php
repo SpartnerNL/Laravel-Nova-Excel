@@ -53,6 +53,6 @@ class QueuedExport extends ExportToExcel implements ShouldQueue
      */
     public function name()
     {
-        return __('Export to Excel');
+        return $this->name ?? __('Export to Excel');
     }
 }
