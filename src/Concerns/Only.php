@@ -8,9 +8,9 @@ use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 trait Only
 {
     /**
-     * @var array|null
+     * @var array
      */
-    protected $only;
+    protected $only = [];
 
     /**
      * @var bool
@@ -50,7 +50,7 @@ trait Only
     }
 
     /**
-     * @return array|null
+     * @return array
      */
     public function getOnly()
     {
@@ -64,8 +64,14 @@ trait Only
     {
         // If not a specific only array, and user wants only index fields,
         // fill the only with the index fields.
-        if ($this->onlyIndexFields && (!is_array($this->only) || count($this->only) === 0)) {
-            $this->only = $request->indexFields($request->newResource());
+        $indexFields = $request->indexFields($request->newResource());
+
+        if ($this->onlyIndexFields && count($this->only) === 0) {
+            $this->only = $indexFields;
+        } elseif (!$this->onlyIndexFields) {
+            $modelAttributes = optional($request->toQuery()->first())->attributesToArray() ?: [];
+
+            $this->only = array_merge(array_keys($modelAttributes), $indexFields);
         }
     }
 }
