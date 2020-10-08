@@ -3,12 +3,11 @@
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Laravel\Nova\Nova;
+use Laravie\SerializesQuery\Eloquent;
 use Maatwebsite\LaravelNovaExcel\Requests\SerializedRequest;
 
-/**
- * @deprecated It's currently impossible to queue an export based on dynamic filters due to serialization issues of the query.
- */
 class QueuedExport extends ExportToExcel implements ShouldQueue
 {
     /**
@@ -25,7 +24,11 @@ class QueuedExport extends ExportToExcel implements ShouldQueue
             $this->request = SerializedRequest::serialize($this->request);
         }
 
-        return ['headings', 'except', 'only', 'onlyIndexFields', 'request', 'resource'];
+        if ($this->query instanceof QueryBuilder) {
+            $this->query = Eloquent::serialize($this->query);
+        }
+
+        return ['headings', 'except', 'only', 'onlyIndexFields', 'request', 'resource', 'query'];
     }
 
     /**
@@ -35,6 +38,10 @@ class QueuedExport extends ExportToExcel implements ShouldQueue
     {
         if ($this->request instanceof SerializedRequest) {
             $this->request = $this->request->unserialize();
+        }
+
+        if (is_array($this->query)) {
+            $this->query = Eloquent::unserialize($this->query);
         }
 
         // Reload Nova resources
