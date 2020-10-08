@@ -63,7 +63,7 @@ trait WithFilename
     {
         $fields = $request->resolveFields();
 
-        if ($filename = $fields->get('filename')) {
+        if ($filename = $fields->get('filename', $this->filename)) {
             if (!Str::contains($filename, '.')) {
                 $filename .= '.' . $this->getDefaultExtension();
             }
