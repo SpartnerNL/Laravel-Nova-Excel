@@ -19,7 +19,7 @@
   "require": {
     "php": ">=7.1.0",
     "laravel/nova": "*",
-    "laravie/serialize-queries": "^0.2",
+    "laravie/serialize-queries": "^0.3",
     "maatwebsite/excel": "^3.1"
   },
   "autoload": {
