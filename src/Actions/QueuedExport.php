@@ -4,6 +4,7 @@ namespace Maatwebsite\LaravelNovaExcel\Actions;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Laravel\Nova\Nova;
 use Laravie\SerializesQuery\Eloquent;
 use Maatwebsite\LaravelNovaExcel\Requests\SerializedRequest;
@@ -24,7 +25,7 @@ class QueuedExport extends ExportToExcel implements ShouldQueue
             $this->request = SerializedRequest::serialize($this->request);
         }
 
-        if ($this->query instanceof QueryBuilder) {
+        if ($this->query instanceof QueryBuilder || $this->query instanceof Relation) {
             $this->query = Eloquent::serialize($this->query);
         }
 
