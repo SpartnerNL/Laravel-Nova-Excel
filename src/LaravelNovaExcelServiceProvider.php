@@ -20,10 +20,10 @@ class LaravelNovaExcelServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             $this->routes();
         });
-        
+
         $this->addExportHelperMacrosToNovaFields();
     }
-    
+
     protected function addExportHelperMacrosToNovaFields()
     {
         Field::macro('onlyOnExport', function () {
