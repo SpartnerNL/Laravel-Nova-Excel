@@ -3,10 +3,12 @@
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
 
 class DownloadExcel extends ExportToExcel
 {
@@ -28,6 +30,10 @@ class DownloadExcel extends ExportToExcel
      */
     public function handle(ActionRequest $request, Action $exportable): array
     {
+        if (config('excel.temporary_files.remote_disk')) {
+            return $this->handleRemoteDisk($request, $exportable);
+        }
+
         $response = Excel::download(
             $exportable,
             $this->getFilename(),
@@ -43,20 +49,45 @@ class DownloadExcel extends ExportToExcel
         return \is_callable($this->onSuccess)
             ? ($this->onSuccess)($request, $response)
             : Action::download(
-                $this->getDownloadUrl($response),
+                $this->getDownloadUrl($response->getFile()->getPathname()),
                 $this->getFilename()
             );
     }
 
     /**
-     * @param BinaryFileResponse $response
+     * @param ActionRequest $request
+     * @param Action        $exportable
+     *
+     * @return array
+     */
+    public function handleRemoteDisk(ActionRequest $request, Action $exportable): array
+    {
+        $temporaryFilePath = config('excel.temporary_files.remote_prefix') . 'laravel-excel-' . Str::random(32) . '.' . $this->getDefaultExtension();
+        $isStored = Excel::store($exportable, $temporaryFilePath, config('excel.temporary_files.remote_disk'), $this->getWriterType());
+
+        if (!$isStored) {
+            return \is_callable($this->onFailure)
+                ? ($this->onFailure)($request, null)
+                : Action::danger(__('Resource could not be exported.'));
+        }
+
+        return \is_callable($this->onSuccess)
+            ? ($this->onSuccess)($request, $temporaryFilePath)
+            : Action::download(
+                $this->getDownloadUrl($temporaryFilePath),
+                $this->getFilename()
+            );
+    }
+
+    /**
+     * @param string $filePath
      *
      * @return string
      */
-    protected function getDownloadUrl(BinaryFileResponse $response): string
+    protected function getDownloadUrl(string $filePath): string
     {
         return URL::temporarySignedRoute('laravel-nova-excel.download', now()->addMinutes(1), [
-            'path'     => encrypt($response->getFile()->getPathname()),
+            'path'     => encrypt($filePath),
             'filename' => $this->getFilename(),
         ]);
     }
