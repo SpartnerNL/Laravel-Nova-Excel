@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
@@ -8,7 +8,6 @@ use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Http\Requests\ActionRequest;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-
 
 class DownloadExcel extends ExportToExcel
 {
@@ -63,7 +62,7 @@ class DownloadExcel extends ExportToExcel
     public function handleRemoteDisk(ActionRequest $request, Action $exportable): array
     {
         $temporaryFilePath = config('excel.temporary_files.remote_prefix') . 'laravel-excel-' . Str::random(32) . '.' . $this->getDefaultExtension();
-        $isStored = Excel::store($exportable, $temporaryFilePath, config('excel.temporary_files.remote_disk'), $this->getWriterType());
+        $isStored          = Excel::store($exportable, $temporaryFilePath, config('excel.temporary_files.remote_disk'), $this->getWriterType());
 
         if (!$isStored) {
             return \is_callable($this->onFailure)
