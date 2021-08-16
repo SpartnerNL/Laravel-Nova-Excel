@@ -6,6 +6,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Routing\ResponseFactory;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,10 +32,10 @@ class ExcelController extends Controller
 
         if (config('excel.temporary_files.remote_disk')) {
             app()->terminating(function () use ($decryptedPath) {
-                \Storage::disk(config('excel.temporary_files.remote_disk'))->delete($decryptedPath);
+                Storage::disk(config('excel.temporary_files.remote_disk'))->delete($decryptedPath);
             });
 
-            return \Storage::disk(config('excel.temporary_files.remote_disk'))
+            return Storage::disk(config('excel.temporary_files.remote_disk'))
                 ->download($decryptedPath, $data['filename']);
         } else {
             return $response->download(
