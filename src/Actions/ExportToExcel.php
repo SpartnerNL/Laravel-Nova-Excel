@@ -146,7 +146,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * Sets the attributes to be selected
+     * Sets the attributes to be selected.
      *
      * @param array|mixed $exportAttributes
      * @return $this
