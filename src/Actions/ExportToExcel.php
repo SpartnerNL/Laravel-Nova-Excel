@@ -54,12 +54,12 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     /**
      * @var callable|null
      */
-    protected $alterateQuery;
+    protected $callbackQuery;
 
     /**
      * @var array|null
      */
-    protected $exportFields;
+    protected $exportAttributes;
 
     /**
      * @var Builder
@@ -100,8 +100,8 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
         $this->handleOnly($this->request);
         $this->handleHeadings($query, $this->request);
 
-        if (!is_null($this->alterateQuery)) {
-            ($this->alterateQuery)($query);
+        if (is_callable($this->callbackQuery)) {
+            ($this->callbackQuery)($query);
         }
 
         return $this->handle($request, $this->withQuery($query));
@@ -138,21 +138,22 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
      *
      * @return $this
      */
-    public function alterateQuery(callable $callable)
+    public function tapQuery(callable $callable)
     {
-        $this->alterate = $callable;
+        $this->callbackQuery = $callable;
 
         return $this;
     }
 
     /**
-     * @param array $fields
+     * Sets the attributes to be selected
      *
+     * @param array|mixed $exportAttributes
      * @return $this
      */
-    public function exportFields(array $fields)
+    public function exportAttributes($exportAttributes)
     {
-        $this->exportFields = $fields;
+        $this->exportAttributes = is_array($exportAttributes) ? $exportAttributes : func_get_args();
 
         return $this;
     }
@@ -275,7 +276,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     protected function replaceFieldValuesWhenOnResource(Model $model, array $only = []): array
     {
         $resource = $this->resolveResource($model);
-        $fields   = $this->exportFields ?? $this->resourceFields($resource);
+        $fields   = $this->exportAttributes ?? $this->resourceFields($resource);
 
         $row = [];
 
