@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Nova\Fields\Field;
-use Maatwebsite\LaravelNovaExcel\Requests\ExportResourceActionRequest;
+use Maatwebsite\LaravelNovaExcel\Requests\ExportActionRequest;
 
 class LaravelNovaExcelServiceProvider extends ServiceProvider
 {
@@ -33,7 +33,7 @@ class LaravelNovaExcelServiceProvider extends ServiceProvider
                 ->onlyOnIndex()
                 // Then decide when to show it when loaded an index
                 ->showOnIndex(function (Request $request) {
-                    return $request instanceof ExportResourceActionRequest;
+                    return $request instanceof ExportActionRequest;
                 });
         });
 
@@ -42,7 +42,7 @@ class LaravelNovaExcelServiceProvider extends ServiceProvider
             return $this
                 // In this case we don't care what other places the field is show
                 ->showOnIndex(function (Request $request) {
-                    return $request instanceof ExportResourceActionRequest;
+                    return $request instanceof ExportActionRequest;
                 });
         });
 
@@ -51,7 +51,7 @@ class LaravelNovaExcelServiceProvider extends ServiceProvider
             return $this
                 // This way we decide to hide it on exports
                 ->showOnIndex(function (Request $request) {
-                    return !$request instanceof ExportResourceActionRequest;
+                    return !$request instanceof ExportActionRequest;
                 });
         });
     }
