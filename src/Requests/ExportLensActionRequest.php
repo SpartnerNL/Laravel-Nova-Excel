@@ -39,7 +39,9 @@ class ExportLensActionRequest extends LensActionRequest implements ExportActionR
         $lens           = $this->lens();
         $lens->resource = $resource->model();
 
-        return $lens->resolveFields($this);
+        return $lens->resolveFields($this)
+            ->filterForIndex($this, $lens->resource)
+            ->withoutListableFields();
     }
 
     /**
