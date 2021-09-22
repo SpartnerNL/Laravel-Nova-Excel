@@ -20,9 +20,8 @@ trait WithHeadings
     protected $headings = [];
 
     /**
-     * @param array|mixed $headings
-     * @param array       $only
-     *
+     * @param  array|mixed  $headings
+     * @param  array  $only
      * @return $this
      */
     public function withHeadings($headings = null)
@@ -49,8 +48,8 @@ trait WithHeadings
     }
 
     /**
-     * @param Builder             $query
-     * @param ExportActionRequest $request
+     * @param  Builder  $query
+     * @param  ExportActionRequest  $request
      */
     protected function handleHeadings($query, ExportActionRequest $request)
     {

@@ -5,8 +5,7 @@ namespace Maatwebsite\LaravelNovaExcel\Concerns;
 trait WithChunkCount
 {
     /**
-     * @param int $chunkCount
-     *
+     * @param  int  $chunkCount
      * @return $this
      */
     public function withChunkCount(int $chunkCount)

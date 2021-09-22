@@ -22,9 +22,8 @@ class DownloadExcel extends ExportToExcel
     }
 
     /**
-     * @param ActionRequest $request
-     * @param Action        $exportable
-     *
+     * @param  ActionRequest  $request
+     * @param  Action  $exportable
      * @return array
      */
     public function handle(ActionRequest $request, Action $exportable): array
@@ -54,9 +53,8 @@ class DownloadExcel extends ExportToExcel
     }
 
     /**
-     * @param ActionRequest $request
-     * @param Action        $exportable
-     *
+     * @param  ActionRequest  $request
+     * @param  Action  $exportable
      * @return array
      */
     public function handleRemoteDisk(ActionRequest $request, Action $exportable): array
@@ -79,8 +77,7 @@ class DownloadExcel extends ExportToExcel
     }
 
     /**
-     * @param string $filePath
-     *
+     * @param  string  $filePath
      * @return string
      */
     protected function getDownloadUrl(string $filePath): string

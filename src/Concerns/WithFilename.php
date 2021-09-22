@@ -15,8 +15,7 @@ trait WithFilename
     protected $filename;
 
     /**
-     * @param string|null $filename
-     *
+     * @param  string|null  $filename
      * @return $this
      */
     public function withFilename(string $filename = null)
@@ -35,7 +34,7 @@ trait WithFilename
     }
 
     /**
-     * @param ActionRequest $request
+     * @param  ActionRequest  $request
      */
     protected function withDefaultFilename(ActionRequest $request)
     {
@@ -57,7 +56,7 @@ trait WithFilename
     abstract protected function getDefaultExtension(): string;
 
     /**
-     * @param ActionRequest $request
+     * @param  ActionRequest  $request
      */
     protected function handleFilename(ActionRequest $request): void
     {

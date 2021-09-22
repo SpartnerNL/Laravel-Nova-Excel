@@ -10,10 +10,9 @@ trait AskForWriterType
     /**
      * Ask the user for a filename.
      *
-     * @param array|null    $options
-     * @param string|null   $label
-     * @param callable|null $callback
-     *
+     * @param  array|null  $options
+     * @param  string|null  $label
+     * @param  callable|null  $callback
      * @return $this
      */
     public function askForWriterType(array $options = null, string $label = null, callable $callback = null)

@@ -15,10 +15,10 @@ class ExcelController extends Controller
     use ValidatesRequests;
 
     /**
-     * @param Request         $request
-     * @param ResponseFactory $response
-     *
+     * @param  Request  $request
+     * @param  ResponseFactory  $response
      * @return Response
+     *
      * @throws ValidationException
      */
     public function download(Request $request, ResponseFactory $response): Response

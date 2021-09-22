@@ -10,8 +10,7 @@ trait WithDisk
     protected $disk;
 
     /**
-     * @param string|null $disk
-     *
+     * @param  string|null  $disk
      * @return $this
      */
     public function withDisk(string $disk = null)

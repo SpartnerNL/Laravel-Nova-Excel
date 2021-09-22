@@ -24,9 +24,9 @@ class SerializedRequest
     private $lens;
 
     /**
-     * @param string      $className
-     * @param string      $resource
-     * @param string|null $lens
+     * @param  string  $className
+     * @param  string  $resource
+     * @param  string|null  $lens
      */
     public function __construct(string $className, string $resource, string $lens = null)
     {
@@ -36,8 +36,7 @@ class SerializedRequest
     }
 
     /**
-     * @param ActionRequest|LensActionRequest $request
-     *
+     * @param  ActionRequest|LensActionRequest  $request
      * @return SerializedRequest
      */
     public static function serialize(ActionRequest $request)

@@ -12,8 +12,7 @@ trait WithWriterType
     protected $writerType;
 
     /**
-     * @param string|null $writerType
-     *
+     * @param  string|null  $writerType
      * @return $this
      */
     public function withWriterType(string $writerType = null)
@@ -32,7 +31,7 @@ trait WithWriterType
     }
 
     /**
-     * @param ActionRequest $request
+     * @param  ActionRequest  $request
      */
     protected function handleWriterType(ActionRequest $request)
     {

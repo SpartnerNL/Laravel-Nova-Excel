@@ -10,8 +10,7 @@ trait Except
     protected $except;
 
     /**
-     * @param array|mixed $columns
-     *
+     * @param  array|mixed  $columns
      * @return $this
      */
     public function except($columns)

@@ -5,9 +5,8 @@ namespace Maatwebsite\LaravelNovaExcel\Requests;
 trait WithHeadingFinder
 {
     /**
-     * @param string      $attribute
-     * @param string|null $default
-     *
+     * @param  string  $attribute
+     * @param  string|null  $default
      * @return string|null
      */
     public function findHeading(string $attribute, string $default = null)

@@ -23,8 +23,7 @@ class ExportResourceActionRequest extends ActionRequest implements ExportActionR
     }
 
     /**
-     * @param \Laravel\Nova\Resource $resource
-     *
+     * @param  \Laravel\Nova\Resource  $resource
      * @return Collection|Field[]
      */
     public function resourceFields(Resource $resource): Collection

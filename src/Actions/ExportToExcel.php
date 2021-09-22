@@ -74,8 +74,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     /**
      * Execute the action for the given request.
      *
-     * @param  \Laravel\Nova\Http\Requests\ActionRequest $request
-     *
+     * @param  \Laravel\Nova\Http\Requests\ActionRequest  $request
      * @return mixed
      */
     public function handleRequest(ActionRequest $request)
@@ -94,9 +93,8 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * @param ActionRequest $request
-     * @param Action        $exportable
-     *
+     * @param  ActionRequest  $request
+     * @param  Action  $exportable
      * @return array
      */
     public function handle(ActionRequest $request, Action $exportable): array
@@ -120,8 +118,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * @param callable $callback
-     *
+     * @param  callable  $callback
      * @return $this
      */
     public function onSuccess(callable $callback)
@@ -132,8 +129,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * @param callable $callback
-     *
+     * @param  callable  $callback
      * @return $this
      */
     public function onFailure(callable $callback)
@@ -144,8 +140,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * @param string $name
-     *
+     * @param  string  $name
      * @return $this
      */
     public function withName(string $name)
@@ -172,8 +167,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * @param Model|mixed $row
-     *
+     * @param  Model|mixed  $row
      * @return array
      */
     public function map($row): array
@@ -209,8 +203,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * @param Builder $query
-     *
+     * @param  Builder  $query
      * @return $this
      */
     protected function withQuery($query)
@@ -229,9 +222,8 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * @param Model $model
-     * @param array $only
-     *
+     * @param  Model  $model
+     * @param  array  $only
      * @return array
      */
     protected function replaceFieldValuesWhenOnResource(Model $model, array $only = []): array
@@ -269,8 +261,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * @param \Laravel\Nova\Resource $resource
-     *
+     * @param  \Laravel\Nova\Resource  $resource
      * @return Collection
      */
     protected function resourceFields(Resource $resource)
@@ -279,8 +270,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * @param Model $model
-     *
+     * @param  Model  $model
      * @return \Laravel\Nova\Resource
      */
     protected function resolveResource(Model $model): Resource
@@ -291,8 +281,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * @param Field $field
-     *
+     * @param  Field  $field
      * @return bool
      */
     protected function isExportableField(Field $field): bool

@@ -18,8 +18,7 @@ trait Only
     protected $onlyIndexFields = true;
 
     /**
-     * @param array|mixed $columns
-     *
+     * @param  array|mixed  $columns
      * @return $this
      */
     public function only($columns)
@@ -58,7 +57,7 @@ trait Only
     }
 
     /**
-     * @param ExportActionRequest|ActionRequest $request
+     * @param  ExportActionRequest|ActionRequest  $request
      */
     protected function handleOnly(ExportActionRequest $request)
     {

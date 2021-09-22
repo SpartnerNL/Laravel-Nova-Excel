@@ -8,8 +8,7 @@ use Laravel\Nova\Http\Requests\LensActionRequest;
 class ExportActionRequestFactory
 {
     /**
-     * @param ActionRequest $request
-     *
+     * @param  ActionRequest  $request
      * @return ExportActionRequest
      */
     public static function make(ActionRequest $request): ExportActionRequest
