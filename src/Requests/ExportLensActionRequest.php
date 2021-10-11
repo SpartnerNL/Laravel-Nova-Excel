@@ -23,7 +23,11 @@ class ExportLensActionRequest extends LensActionRequest implements ExportActionR
     public function toExportQuery()
     {
         return $this->toQuery()->when(!$this->forAllMatchingResources(), function ($query) {
-            $query->whereKey(explode(',', $this->resources));
+            $groups = $query->getQuery()->groups;
+
+            is_array($groups) && 1 === count($groups)
+                ? $query->whereIn($groups[0], explode(',', $this->resources))
+                : $query->whereKey(explode(',', $this->resources));
         });
     }
 
