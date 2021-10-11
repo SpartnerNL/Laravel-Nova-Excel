@@ -52,6 +52,11 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     protected $resource;
 
     /**
+     * @var string
+     */
+    protected $exportQueryKey;
+
+    /**
      * @var Builder
      */
     protected $query;
@@ -85,7 +90,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
         $this->resource = $request->resource();
         $this->request  = ExportActionRequestFactory::make($request);
 
-        $query = $this->request->toExportQuery();
+        $query = $this->request->toExportQuery($this->exportQueryKey);
         $this->handleOnly($this->request);
         $this->handleHeadings($query, $this->request);
 
@@ -146,6 +151,17 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     public function withName(string $name)
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @param string $exportQueryKey
+     * @return $this
+     */
+    public function withExportQueryKey(string $exportQueryKey)
+    {
+        $this->exportQueryKey = $exportQueryKey;
 
         return $this;
     }
