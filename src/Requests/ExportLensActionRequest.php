@@ -18,12 +18,15 @@ class ExportLensActionRequest extends LensActionRequest implements ExportActionR
     protected $resourceInstance;
 
     /**
+     * @param string|null $exportQueryKey
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder|mixed
      */
-    public function toExportQuery()
+    public function toExportQuery(string $exportQueryKey = null)
     {
-        return $this->toQuery()->when(!$this->forAllMatchingResources(), function ($query) {
-            $query->whereKey(explode(',', $this->resources));
+        return $this->toQuery()->when(!$this->forAllMatchingResources(), function ($query) use ($exportQueryKey) {
+            $exportQueryKey
+            ? $query->whereIn($exportQueryKey, explode(',', $this->resources))
+            : $query->whereKey(explode(',', $this->resources));
         });
     }
 
