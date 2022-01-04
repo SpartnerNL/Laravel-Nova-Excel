@@ -10,6 +10,7 @@ use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\Field;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Http\Requests\ActionRequest;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Nova;
 use Laravel\Nova\Resource;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -159,9 +160,10 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
+     * @param  NovaRequest  $request
      * @return Field[]
      */
-    public function fields()
+    public function fields(NovaRequest $request)
     {
         return $this->actionFields;
     }
