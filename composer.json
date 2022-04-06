@@ -18,7 +18,7 @@
   ],
   "require": {
     "php": ">=7.1.0",
-    "laravel/nova": "*",
+    "laravel/nova": "^4.0",
     "laravie/serialize-queries": "^1.0|^2.0",
     "maatwebsite/excel": "^3.1"
   },
