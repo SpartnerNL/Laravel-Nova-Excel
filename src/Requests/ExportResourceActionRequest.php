@@ -30,7 +30,7 @@ class ExportResourceActionRequest extends ActionRequest implements ExportActionR
     {
         return $resource->indexFields($this);
     }
-    
+
     /**
      * Determine if the request is for all matching resources.
      *
