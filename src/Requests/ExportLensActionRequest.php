@@ -60,4 +60,14 @@ class ExportLensActionRequest extends LensActionRequest implements ExportActionR
 
         return $this->resourceInstance->availableLenses($this);
     }
+
+    /**
+     * Determine if the request is for all matching resources.
+     *
+     * @return bool
+     */
+    public function forAllMatchingResources()
+    {
+        return $this->resources === 'all';
+    }
 }
