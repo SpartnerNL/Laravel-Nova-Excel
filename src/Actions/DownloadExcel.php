@@ -2,7 +2,6 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Laravel\Nova\Actions\Action;
@@ -83,13 +82,6 @@ class DownloadExcel extends ExportToExcel
      */
     protected function getDownloadUrl(string $filePath): string
     {
-        if ($remoteDisk = config('excel.temporary_files.remote_disk')) {
-            return Storage::disk($remoteDisk)
-                ->temporaryUrl($filePath, now()->addMinutes(1), [
-                    'ResponseContentDisposition' => 'filename="' . $this->getFilename() . '"',
-                ]);
-        }
-
         return URL::temporarySignedRoute('laravel-nova-excel.download', now()->addMinutes(1), [
             'path'     => encrypt($filePath),
             'filename' => $this->getFilename(),
