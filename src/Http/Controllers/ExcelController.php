@@ -31,9 +31,9 @@ class ExcelController extends Controller
         $decryptedPath = decrypt($data['path']);
 
         if (config('excel.temporary_files.remote_disk')) {
-            app()->terminating(function () use ($decryptedPath) {
+            dispatch(function () use ($decryptedPath): void {
                 Storage::disk(config('excel.temporary_files.remote_disk'))->delete($decryptedPath);
-            });
+            })->delay(now()->addMinute());
 
             return Storage::disk(config('excel.temporary_files.remote_disk'))
                 ->download($decryptedPath, $data['filename']);
