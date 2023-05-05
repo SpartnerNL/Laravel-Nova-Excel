@@ -24,9 +24,9 @@ class DownloadExcel extends ExportToExcel
     /**
      * @param  ActionRequest  $request
      * @param  Action  $exportable
-     * @return array
+     * @return mixed
      */
-    public function handle(ActionRequest $request, Action $exportable): array
+    public function handle(ActionRequest $request, Action $exportable)
     {
         if (config('excel.temporary_files.remote_disk')) {
             return $this->handleRemoteDisk($request, $exportable);

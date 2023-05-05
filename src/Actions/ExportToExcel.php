@@ -96,9 +96,9 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     /**
      * @param  ActionRequest  $request
      * @param  Action  $exportable
-     * @return array
+     * @return mixed
      */
-    public function handle(ActionRequest $request, Action $exportable): array
+    public function handle(ActionRequest $request, Action $exportable)
     {
         $response = Excel::store(
             $exportable,
