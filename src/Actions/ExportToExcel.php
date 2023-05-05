@@ -139,7 +139,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
 
         return $this;
     }
-    
+
     /**
      * @return Builder
      */
