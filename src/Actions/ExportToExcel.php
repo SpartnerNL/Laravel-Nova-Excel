@@ -139,18 +139,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
 
         return $this;
     }
-
-    /**
-     * @param  string  $name
-     * @return $this
-     */
-    public function withName(string $name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
+    
     /**
      * @return Builder
      */
