@@ -149,10 +149,10 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     }
 
     /**
-     * @param  NovaRequest  $request
+     * @param NovaRequest|null $request
      * @return Field[]
      */
-    public function fields(NovaRequest $request)
+    public function fields(NovaRequest $request = null)
     {
         return $this->actionFields;
     }
