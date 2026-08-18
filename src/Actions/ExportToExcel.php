@@ -145,7 +145,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     /**
      * @return Builder
      */
-    public function query(): Builder|EloquentBuilder|Relation;
+    public function query(): Builder|EloquentBuilder|Relation
     {
         return $this->query;
     }
