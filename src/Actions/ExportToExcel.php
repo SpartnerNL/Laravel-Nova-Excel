@@ -2,7 +2,9 @@
 
 namespace Maatwebsite\LaravelNovaExcel\Actions;
 
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -143,7 +145,7 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
     /**
      * @return Builder
      */
-    public function query()
+    public function query(): Builder|EloquentBuilder|Relation;
     {
         return $this->query;
     }
