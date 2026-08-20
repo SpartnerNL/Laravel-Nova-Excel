@@ -20,7 +20,7 @@ trait WithHeadingFinder
             return $default;
         }
 
-        return $field->name;
+        return (string) $field->name;
     }
 
     /**

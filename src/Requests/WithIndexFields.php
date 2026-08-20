@@ -19,7 +19,7 @@ trait WithIndexFields
                 return $field->attribute;
             }
 
-            return $field->name;
+            return (string) $field->name;
         })->unique()->all();
     }
 

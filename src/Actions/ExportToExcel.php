@@ -230,11 +230,13 @@ class ExportToExcel extends Action implements FromQuery, WithCustomChunkSize, Wi
                 continue;
             }
 
+            $name = (string) $field->name;
+
             if (\in_array($field->attribute, $only, true)) {
                 $row[$field->attribute] = $field->value;
-            } elseif (\in_array($field->name, $only, true)) {
+            } elseif (\in_array($name, $only, true)) {
                 // When no field could be found by their attribute name, it's most likely a computed field.
-                $row[$field->name] = $field->value;
+                $row[$name] = $field->value;
             }
         }
 
